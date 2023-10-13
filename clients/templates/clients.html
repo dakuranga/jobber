@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Clients{% endblock %}
+
+{% block content %}
+<html lang="en"></html>
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+  <div class="container">
+    <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Clients</a>
+    <div class="ml-auto">
+      <a href="{% url 'add_client' %}" class="btn btn-light font-weight-bold {% if not request.user.is_superuser %}disabled{% endif %}">Add Client</a>
+    </div>
+  </div>
+</nav>
+  {% if clients %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+          <tr style="background-color: #ffffff; color: #070707;">
+            <th>Name</th>
+            <th>Code</th>
+            <th>Website</th>
+            <th>Details</th>
+            <th>HQ</th>
+            <th>Office</th>
+            <th>Edit</th>
+            <th>Delete</th>
+            <th>Client Since</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for client in clients %}
+            <tr id="client-{{ client.id }}" style="background-color: #ffffff;">
+              <td>{{ client.name }}</td>
+              <td>{{ client.code }}</td>
+              <td><a href="{{ client.website }}" target="_blank">{{ client.website }}</a></td>
+              <td>
+                {% if client.about_client_attachment %}
+                  <a href="{{ client.about_client_attachment.url }}" target="_blank" class="btn btn-info btn-sm">
+                    <i class="fas fa-file-pdf"></i>
+                  </a>
+                {% else %}
+                  <span class="text-muted">No Client Info</span>
+                {% endif %}
+              </td>
+              <td>{{ client.hq }}</td>
+              <td>{{ client.office }}</td>
+              <td>
+                <a href="{% url 'edit_client' client.id %}" class="btn btn-sm btn-primary {% if not request.user.is_superuser %}disabled{% endif %}">
+                  <i class="fas fa-edit"></i>
+                </a>
+                
+              </td>
+              <td>
+                <form action="{% url 'delete_client' %}" method="POST" class="d-inline">
+                  {% csrf_token %}
+                  <input type="hidden" name="client_id" value="{{ client.id }}">
+                  <button type="submit" class="btn btn-sm btn-danger {% if not request.user.is_superuser %}disabled{% endif %}">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </td>
+              <td>{{ client.created_at|date:"d-m-Y" }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info" role="alert">
+      No clients found.
+    </div>
+  {% endif %}
+</div>
+<!-- Pagination Controls -->
+<div class="pagination justify-content-center">
+  <ul class="pagination">
+    {% for i in clients.paginator.page_range %}
+      {% if clients.number == i %}
+        <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+      {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+<!-- End of Pagination Controls -->
+
+
+{% endblock %}

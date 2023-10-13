@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Change Candidate status{% endblock %}
+
+{% block content %}
+<style>
+    /* Page Styles */
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    /* Form Styles */
+    form {
+        width: 60%;
+        margin: 40px auto;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        border-radius: 5px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    input[type="text"], 
+    input[type="datetime-local"], 
+    input[type="date"], 
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        padding: 10px 15px;
+        background-color: #007BFF;  /* Changing color for differentiation */
+        border: none;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Change Candidate Stage</button>
+</form>
+{% endblock %}

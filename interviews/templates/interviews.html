@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Interviews{% endblock %}
+
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+    <div class="container">
+      <!-- Custom CSS class for styling -->
+      <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Interviews</a>
+
+      <form method="GET" action="{% url 'interviews' %}" class="form-inline ml-auto">
+        <div class="form-group d-flex align-items-center">
+          <input type="text" name="q" class="form-control" placeholder="Search name" value="{{ search_query }}">
+          {% if search_query %}
+          <a href="{% url 'interviews' %}" class="clear-search ml-2"><i class="fas fa-times-circle"></i></a>
+          {% endif %}
+          <button type="submit" class="btn btn-light font-weight-bold ml-2">Search</button>
+        </div>
+      </form>
+
+    </div>
+  </nav>
+<style>
+.upcoming {
+    color: green;
+}
+</style>
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead class="thead-dark" style="background-color: #ffffff; color: #070707;">
+            <tr>
+            <th>Sch. Date</th>
+            <th>Candidate</th>
+            <th>Job Title</th> 
+            <th>Mode</th>
+            
+            <th>Int. Date</th>
+            <th>Time</th>
+            <th>Panel</th>
+            <th>Feedback</th>
+            <th>Recruiter</th>  <!-- New column header for Recruiter -->
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for interview in interviews %}
+        <tr>
+            <td>{{ interview.scheduled_date|date:"d-m-y"  }}</td>
+            <td>
+                <span class="{% if interview.interview_date|date:"Y-m-d" > now|date:"Y-m-d" %}upcoming{% endif %}">
+                    <strong>{{ interview.submission.candidate.name }}</strong>
+                </span>
+            </td>
+            <td><strong>{{ interview.submission.job.job_title }}</strong></td>
+            
+            <td>{{ interview.mode }}</td>
+            
+            <td><strong>{{ interview.interview_date|date:"d-m-y" }}</strong> </td>
+            <td><strong>{{ interview.interview_time }}</strong></td>
+            <td>{{ interview.interviewer }}</td>
+            <td>{{ interview.calculated_feedback }}</td>
+            <td>{{ interview.user.name }}</td> <!-- Display the username of the recruiter -->
+            
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+

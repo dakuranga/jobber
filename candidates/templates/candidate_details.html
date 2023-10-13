@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Candidate Details{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+  <div class="container">
+    <!-- Custom CSS class for styling -->
+    <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;"><h3>{{ candidate.name }} <a href="{{ candidate.cv.url }}" target="_blank" class="btn btn-secondary">View CV</a>  <a href="{% url 'submit_candidate_to_job' candidate.id %}" class="btn btn-secondary">
+      Submit
+    </a></h3></a>
+
+  </div>
+</nav>
+
+<div class="container mt-10">
+  <div class="row">
+    <div class="col-md-7">
+      <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-2"><strong>Email:</strong> {{ candidate.email }}</div>
+                <div class="mb-2"><strong>Phone:</strong> {{ candidate.phone }}</div>
+                <div class="mb-2"><strong>Location:</strong> {{ candidate.location }}</div>
+                <div class="mb-2"><strong>Current CTC:</strong> Lacs {{ candidate.current_ctc }} / yr</div>
+                <div class="mb-2"><strong>Expected CTC:</strong> Lacs {{ candidate.expected_ctc}} / yr</div>
+                <div class="mb-3">
+                    <strong>Notice Period:</strong> {{ candidate.notice_period }} days
+                    {% if candidate.serving_notice_period %}
+                      (Serving)
+                    {% else %}
+                      (Not Serving)
+                    {% endif %}
+                </div>
+                <div class="mb-2"><strong>Last Working Day:</strong> {{ candidate.last_working_day|default:"N/A" }}</div>
+                <div class="mb-2"><strong>Expected Joining:</strong> {{ candidate.expected_joining_date|default:"N/A" }}</div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-2"><strong>Total Exp:</strong> {{ candidate.total_experience }} yrs</div>
+                <div class="mb-2"><strong>Relevant Exp:</strong> {{ candidate.relevant_experience }} yrs</div>
+                <div class="mb-2"><strong>Reason for Change:</strong> {{ candidate.reason_for_change|default:"N/A" }}</div>
+                <div class="mb-2">
+                  <strong>LinkedIn:</strong>
+                  {% if candidate.linkedin_url %}
+                    <a href="{{ candidate.linkedin_url }}" target="_blank">Visit</a>
+                  {% else %}
+                    N/A
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+          
+
+          
+          <hr>
+          <h5><strong>Recruiter Notes:</strong></h5>
+          <p>{{ candidate.recruiter_notes|default:"No notes available." }}</p>
+          <hr>
+
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5">
+      <!-- Candidate Timeline -->
+      <div class="card">
+        <div class="card-header bg-secondary text-white">
+          <h3>Timeline</h3>
+        </div>
+        <ul class="list-group list-group-flush">
+          <!-- You can loop through candidate activities here -->
+          <li class="list-group-item">
+            <strong>Sourced</strong> 
+            <br>
+            <strong>Date:</strong> {{ candidate.created_at|date:"Y-m-d" }}
+          </li>
+          
+          <li class="list-group-item">
+            <strong>Submitted</strong>
+            <ul>
+              {% for submission in candidate.jobsubmission_set.all %}
+                <li>
+                  <strong>Date:</strong> {{ submission.date_submitted|date:"Y-m-d" }} {{ submission.job.job_title }}
+                </li>
+              {% empty %}
+                <li>No submissions</li>
+              {% endfor %}
+            </ul>
+          </li>
+          
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

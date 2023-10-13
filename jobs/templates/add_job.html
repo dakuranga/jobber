@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Add Job{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+    <div class="container">
+      <!-- Custom CSS class for styling -->
+      <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Add Job</a>
+  
+    </div>
+  </nav>
+<div class="container my-4">
+
+
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="needs-validation bg-light p-3 rounded shadow" novalidate>
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Fields for the first column -->
+                <div class="form-group mb-1">
+                    <label for="{{ form.job_title.id_for_label }}">Job Title</label>
+                    {{ form.job_title|add_class:"form-control" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.job_location.id_for_label }}">Job Location</label>
+                    {{ form.job_location|add_class:"form-control" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.job_work_hours.id_for_label }}">Job Work Hours</label>
+                    {{ form.job_work_hours|add_class:"form-control" |attr:"rows:1" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.job_mode.id_for_label }}">Job Mode</label>
+                    {{ form.job_mode|add_class:"form-control" }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Fields for the second column -->
+                <div class="form-group mb-1">
+                    <label for="{{ form.client.id_for_label }}">Client</label>
+                    {{ form.client|add_class:"form-control" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.job_status.id_for_label }}">Job Status</label>
+                    {{ form.job_status|add_class:"form-control" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.job_type.id_for_label }}">Job Type</label>
+                    {{ form.job_type|add_class:"form-control" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.job_priority.id_for_label }}">Job Priority</label>
+                    {{ form.job_priority|add_class:"form-control" }}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Full-width field for Job Description -->
+        <div class="form-group mb-2">
+            <label for="{{ form.job_description.id_for_label }}">Job Description</label>
+            {{ form.job_description|add_class:"form-control" |attr:"rows:2" }}
+        </div>
+        <div class="form-group mb-2">
+          <label for="{{ form.job_attachment.id_for_label }}">Job Attachment</label>
+          {{ form.job_attachment|add_class:"form-control-file" }}
+      </div>
+
+        <div class="d-flex justify-content-between mt-2">
+            <button type="submit" class="btn btn-success">Add Job</button>
+            <a href="{% url 'jobs' %}" class="btn btn-danger">Back to jobs list</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Job Detail{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+    <div class="container">
+      <!-- Custom CSS class for styling -->
+      <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Reports</a>
+      <span class="navbar-text" style="color: #ffffff; margin-right: 0px; font-weight: bold;">
+        CVs In DB: {{ total_candidates_indb }}
+      </span>
+
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6 text-center">
+            <a href="{% url 'export_candidates_csv' %}" class="btn btn-primary btn-lg btn-block export-btn" data-toggle="tooltip" title="Download a CSV file with all the information of candidates">
+                <i class="fas fa-file-csv"></i> Export Candidates as CSV
+            </a>
+        </div>
+        <div class="col-md-6 text-center">
+            <a href="{% url 'export_candidates_zip' %}" class="btn btn-primary btn-lg btn-block export-btn" data-toggle="tooltip" title="Download a ZIP file with all the CV's in the database">
+                <i class="fas fa-file-archive"></i> Export Candidates as ZIP
+            </a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6 text-center">
+         <a href="{% url 'export_jobs_csv' %}" class="btn btn-primary btn-lg btn-block export-btn" data-toggle="tooltip" title="Download a CSV file with all the information of jobs">
+            <i class="fas fa-file-csv"></i> Export Jobs as CSV
+         </a>
+        </div>
+        <div class="col-md-6 text-center">
+         <a href="{% url 'export_job_submissions_csv' %}" class="btn btn-primary btn-lg btn-block export-btn" data-toggle="tooltip" title="Download a CSV file with all the candidate submissions">
+            <i class="fas fa-file-csv"></i> Export Submissions as CSV
+            </a>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+{% endblock %}

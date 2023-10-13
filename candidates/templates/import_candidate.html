@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+    <div class="container">
+      <!-- Custom CSS class for styling -->
+      <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Import Candidate</a>
+
+    </div>
+  </nav>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-primary mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Upload a CV  </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            {{ form.as_p }}
+                        </div>
+                        <div class="d-flex justify-content-end">
+                          <button type="submit" class="btn btn-success">Import</button>
+                          <div class="mx-2"></div> <!-- Empty div with margin -->
+                          <a href="{% url 'candidates' %}" class="btn btn-danger">Back</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

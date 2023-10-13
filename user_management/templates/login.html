@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Jobber - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+        }
+
+        .left-section {
+            flex-basis: 60%;
+            background-color: #5a58fb;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            border: 0; /* Set border to 0 or none */
+            outline: none; /* Optionally remove outline */
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            font-size: 60px;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .logo-container img {
+            width: 100px;
+            height: 100px;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 20px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+.right-section {
+    flex-basis: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.form-container {
+    width: 80%;
+    max-width: 400px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+form .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+form .form-group label {
+    margin-bottom: 5px;
+}
+
+form .form-group input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px;
+    background-color: #5a58fb;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #5a58fb;
+}
+
+.links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+}
+
+.signup-link, .forgot-password-link {
+    color: #5a58fb;
+}
+
+.signup-link:hover, .forgot-password-link:hover {
+    color: #5a58fb;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <div class="logo-container">
+              <i class="fa fa-ravelry fa-5x"></i>
+            </div>
+            <h1>Jobber</h1>
+            <p class="tagline">Unleash Your Hiring Potential</p>
+            <p class="tagline"></p>
+
+
+        
+        <footer>
+            &copy; Linksoft Technology Solutions
+        </footer>
+    </div>
+
+<div class="right-section">
+    <div class="form-container">
+        <h2>Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">Email</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="id_password">Password</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-block">Login</button>
+          {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

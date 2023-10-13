@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+  <div class="container">
+    <!-- Custom CSS class for styling -->
+    <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Submit To {{ job.job_title }}</a>
+
+  </div>
+</nav>
+<div class="container mt-2">
+  <form method="get" action=".">
+      <input type="text" name="search" placeholder="Search candidates..." value="{{ request.GET.search|default:'' }}">
+      <button type="submit">Search</button>
+  </form>
+
+  <form method="post">
+    {% csrf_token %}
+    <table>
+      <thead>
+        <tr>
+          <th>Select</th>
+          <th>Candidate Name</th>
+          <!-- Other headers -->
+        </tr>
+      </thead>
+      <tbody>
+        {% for candidate in candidates %}
+        <tr>
+          <td><input type="checkbox" name="candidate" value="{{ candidate.id }}"></td>
+          <td>{{ candidate.name }}</td>
+          <!-- Other fields -->
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit">Submit Selected</button>
+  </form>
+
+  <!-- Pagination Links -->
+  <div class="pagination">
+      <span class="step-links">
+          {% if candidates.has_previous %}
+              <a href="?page=1&search={{ request.GET.search|default:'' }}">First</a>
+              <a href="?page={{ candidates.previous_page_number }}&search={{ request.GET.search|default:'' }}">Previous</a>
+          {% endif %}
+
+          <span class="current">
+              Page {{ candidates.number }} of {{ candidates.paginator.num_pages }}.
+          </span>
+
+          {% if candidates.has_next %}
+              <a href="?page={{ candidates.next_page_number }}&search={{ request.GET.search|default:'' }}">Next</a>
+              <a href="?page={{ candidates.paginator.num_pages }}&search={{ request.GET.search|default:'' }}">Last</a>
+          {% endif %}
+      </span>
+  </div>
+{% endblock %}

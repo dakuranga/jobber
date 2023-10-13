@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block title %}Recruitment Dashboard{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+  <div class="container d-flex justify-content-between">
+    <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Home</a>
+    
+    <!-- Centered Metrics -->
+    <div class="metrics-container d-flex align-items-center">
+        <div class="metric">
+            <span class="label">OPEN JOBS</span>
+            <span class="doughnut">{{ total_open_requirements }}</span>
+        </div>
+        <div class="metric">
+            <span class="label">OPEN P1 JOBS</span>
+            <span class="doughnut">{{ total_high_priority_requirements }}</span>
+        </div>
+    </div>
+    <a href="#">
+      <span class="text-white font-weight-bold" style="margin-right: 20px;"></span>
+  </a>
+    <a href="{% url 'linkedin_view' %}">
+      <span class="text-white font-weight-bold" style="margin-right: 20px;"></span>
+  </a>
+    <span class="text-white font-weight-bold">Linksoft Technology Solutions</span>
+  </div>
+</nav>
+
+<style>
+  .metrics-container {
+    flex: 1; /* make the metrics container take the maximum available width in the center */
+    justify-content: center; /* center the metrics horizontally */
+}
+
+.metric {
+    display: flex; /* make the contents of the metric line up horizontally */
+    align-items: center; /* vertically align the circle and the number */
+    margin: 0 20px; /* space out the metrics */
+}
+
+.label {
+    color: #ffffff;
+    margin-right: 15px; /* space between the label and the circle */
+}
+
+.doughnut {
+    width: 35px;  /* increased the size to provide room for the doughnut effect */
+    height: 35px;
+    background-color: transparent;
+    border-radius: 50%; 
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    border: 3px solid white;  /* this gives the doughnut effect */
+    color: #ffffff;
+    font-weight: bold;
+}
+
+  .dashboard-container {
+    padding: 13px;
+    background-color: #ffffff;
+  }
+
+  .section-container {
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    margin-bottom: 15px;
+  }
+
+  .table-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 5px;
+  }
+
+  table, th, td {
+    border: 2px solid #5c74c4;
+    text-align: left;
+  }
+
+  th, td {
+    padding: 3px;
+  }
+
+  th {
+    background-color: #ffffff;
+  }
+
+  .list-group {
+    padding-left: 0;
+  }
+
+  .list-group-item {
+    list-style: none;
+    margin: 2px 0;
+  }
+  .dashboard-table th:first-child,
+.dashboard-table td:first-child {
+    width: 150px;  /* Adjust this value to the width you desire */
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;  /* Optional, to truncate content with an ellipsis if it's too long */
+    white-space: nowrap;  /* Optional, to prevent wrapping */
+}
+</style>
+<div class="container-fluid dashboard-container">
+  <div class="row">
+    <div class="col-md-12">
+      <h3 class="table-title" style="display: inline-block; background-color: #4723D9; color: #FFFFFF; padding: 5px;">TA Coverage</h3>
+
+
+      <table class="dashboard-table">
+
+              <tr>
+                  <th>Recruiter</th>
+                  <th>Sourced</th>
+                  <th>Sub. Int.</th>
+                  <th>QC Rejects</th>
+                  <th>Sub. Ext.</th>
+                  <th>L1 Req.</th>
+                  <th>L2 Req.</th>
+                  <th>L3 Req.</th>
+                  <th>Shortlisted</th>
+                  <th>Joined</th>
+              </tr>
+              {% for data in user_data %}
+<tr>
+    <td>{{ data.user.name }}</td>
+    <td>{{ data.sourced_count }}</td>
+    <td>{{ data.internal_submissions }}</td>
+    <td>{{ data.qc_reject_count }}</td>
+    <td>{{ data.client_submissions }}</td>
+    <td>{{ data.l1_interview_count }}</td>
+    <td>{{ data.l2_interview_count }}</td>
+    <td>{{ data.l3_interview_count }}</td>
+    <td>{{ data.shortlisted_count }}</td>
+    <td>{{ data.joined_count }}</td>
+</tr>
+{% endfor %}
+<tr style="background-color: #4723D9; font-size: 1.1em; color: #ffffff ">
+
+  <td><strong>Total</strong></td>
+  <td><strong>{{ total_counts.sourced_count }}</strong></td>
+  <td><strong>{{ total_counts.internal_submissions }}</strong></td>
+  <td><strong>{{ total_counts.qc_reject_count }}</strong></td>
+  <td><strong>{{ total_counts.client_submissions }}</strong></td>
+  <td><strong>{{ total_counts.l1_interview_count }}</strong></td>
+  <td><strong>{{ total_counts.l2_interview_count }}</strong></td>
+  <td><strong>{{ total_counts.l3_interview_count }}</strong></td>
+  <td><strong>{{ total_counts.shortlisted_count }}</strong></td>
+  <td><strong>{{ total_counts.joined_count }}</strong></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="container-fluid dashboard-container">
+  <div class="row">
+  <div class="col-md-12">
+    <h3 class="table-title" style="display: inline-block; background-color: #4723D9; color: #FFFFFF; padding: 5px;">Job Coverage</h3>
+    <table class="dashboard-table">
+        <tr>
+            <th>Job Title</th>
+            <th>Sourced</th>
+            <th>Sub. Int.</th>
+            <th>QC Rejects</th>
+            <th>Sub. Ext.</th>
+            <th>L1 Req.</th>
+            <th>L2 Req.</th>
+            <th>L3 Req.</th>
+            <th>Shortlisted</th>
+            <th>Joined</th>
+
+
+        </tr>
+        {% for job_entry in job_data %}
+            <tr>
+                <td>{{ job_entry.job_title }}</td>
+                <td>NA</td>
+                <td>{{ job_entry.internal_count }}</td>
+                <td>{{ job_entry.qc_reject_count }}</td>
+                <td>{{ job_entry.client_submission_count }}</td>
+                <td>{{ job_entry.l1_interview_count }}</td>
+                <td>{{ job_entry.l2_interview_count }}</td>
+                <td>{{ job_entry.l3_interview_count }}</td>
+                <td>{{ job_entry.shortlisted_count }}</td>
+                <td>{{ job_entry.joined_count }}</td>
+
+
+
+
+
+            </tr>
+        {% endfor %}
+    </table>
+  </div>
+</div>
+  </div>
+
+<div class="container-fluid dashboard-container">
+  <div class="row">
+    <div class="col-md-12">
+      <h3 class="table-title" style="display: inline-block; background-color: #4723D9; color: #FFFFFF; padding: 5px;">Interview LineUp</h3>
+  <table class="dashboard-table">
+
+      <tr>
+          <th>Candidate Name</th>
+          <th>Interview Stage</th>
+          <th>Interview Date</th>
+          <th>Interview Time</th>
+          <th>Recruiter Name</th>
+      </tr>
+      {% for interview in upcoming_interviews %}
+          <tr>
+              <td>{{ interview.submission }}</td>
+              <td>{{ interview.stage }}</td>
+              <td>{{ interview.interview_date }}</td>
+              <td>{{ interview.interview_time }}</td>
+              <td>{{ interview.user.name }}</td>
+          </tr>
+      {% endfor %}
+    </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

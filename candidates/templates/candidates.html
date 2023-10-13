@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block title %}Candidates{% endblock %}
+
+{% block content %}
+<style>
+  /* Your existing CSS for the header */
+  .navbar {
+    /* Your header styles here */
+    /* ... */
+    
+    /* Add margin to the left side equal to the base.html navbar width */
+    margin-left: 68px; /* Adjust as needed to match the base.html navbar width */
+  }
+</style>
+<header class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #4723D9;">
+
+  <div class="container">
+    <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Candidates</a>
+    
+
+    <!-- Display the total number of candidates -->
+
+    <form method="GET" action="{% url 'candidates' %}" class="form-inline ml-auto">
+      <div class="form-group d-flex align-items-center">
+        <input type="text" name="q" class="form-control" placeholder="Search name" value="{{ search_query }}">
+        {% if search_query %}
+        <a href="{% url 'candidates' %}" class="clear-search ml-2"><i class="fas fa-times-circle"></i></a>
+        {% endif %}
+        <button type="submit" class="btn btn-light font-weight-bold ml-2">Search</button>
+      </div>
+    </form>
+    <div class="ml-2">
+      <a href="{% url 'import_candidate' %}" class="btn btn-light font-weight-bold">Import Candidate</a>
+      <a href="{% url 'add_candidate' %}" class="btn btn-light font-weight-bold ml-2">Add Candidate</a>
+    </div>
+  </div>
+</header>
+<main class="table-container" style="margin-top: 70px;">
+  {% if candidates %}
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead class="thead-dark" style="background-color: #ffffff; color: #070707;">
+          <tr>
+            <th>Sourced</th>
+            <th>Recruiter</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>CTC</th>
+            <th>ECTC</th>
+            <th>On NP</th>
+            <th>LWD</th>
+            <th>City</th>
+            <th>CV</th>
+            <th><i class="fas fa-share-alt"></i></th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for candidate in candidates %}
+            <tr id="candidate-{{ candidate.id }}">
+              <td>{{ candidate.created_at|date:"d-m" }}</td>
+              <td>{{ candidate.user.name|get_first_name }}</td>
+              <td><a href="{% url 'candidate_details' candidate.id %}"><strong>{{ candidate.name }}</strong></a></td>
+              <td>{{ candidate.email }}</td>
+              <td>{{ candidate.phone }}</td>
+              <td>{{ candidate.current_ctc }}</td>
+              <td>{{ candidate.expected_ctc }}</td>
+              <td>{% if candidate.serving_notice_period %}Yes{% else %}No{% endif %}</td>
+              <td>{{ candidate.last_working_day }}</td>
+              <td>{{ candidate.location }}</td>
+              <td>
+                {% if candidate.cv %}
+                  <a href="{{ candidate.cv.url }}" target="_blank" class="btn btn-info btn-sm" aria-label="View CV">
+                    <i class="fas fa-file-pdf" aria-hidden="true"></i> <!-- Replace with PDF icon or any suitable icon -->
+                  </a>
+                {% else %}
+                  <span class="text-muted">No CV Available</span>
+                {% endif %}
+              </td>
+
+              <td>
+                <a href="{{ candidate.linkedin_url }}" target="_blank" title="LinkedIn Profile" class="linkedin-icon">
+                    <i class="fab fa-linkedin ml-2"></i>
+                </a>
+              </td>
+
+              <td>
+                <a href="{% url 'edit_candidate' candidate.id %}" class="btn btn-sm btn-primary" aria-label="Edit Candidate">
+                  <i class="fas fa-edit" aria-hidden="true"></i> <!-- Replace with Edit icon or any suitable icon -->
+                </a>
+                <a href="{% url 'submit_candidate_to_job' candidate.id %}" class="btn btn-sm btn-success" aria-label="Submit Candidate">
+                  Submit
+                </a>
+                <form action="{% url 'delete_candidate' %}" method="POST" class="d-inline">
+                  {% csrf_token %}
+                  <input type="hidden" name="candidate_id" value="{{ candidate.id }}">
+                  <button type="submit" class="btn btn-sm btn-danger {% if not request.user.is_superuser %}disabled{% endif %}" aria-label="Delete Candidate">
+                    <i class="fas fa-trash" aria-hidden="true"></i> <!-- Replace with Delete icon or any suitable icon -->
+                  </button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info" role="alert">
+      No candidates found.
+    </div>
+  {% endif %}
+</main>
+
+<!-- Pagination Controls -->
+<div class="pagination justify-content-center">
+  <ul class="pagination">
+    {% for i in candidates.paginator.page_range %}
+      {% if candidates.number == i %}
+        <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+      {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+<!-- End of Pagination Controls -->
+
+{% endblock %}

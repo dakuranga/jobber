@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Add Candidate{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+    <div class="container">
+      <!-- Custom CSS class for styling -->
+      <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Add Candidate</a>
+
+    </div>
+  </nav>
+<div class="container my-2">
+    
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="needs-validation bg-light p-3 rounded shadow" novalidate>
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4">
+                <!-- Fields for the first column -->
+                <div class="form-group mb-1">
+                    <label for="{{ form.name.id_for_label }}">Name</label>
+                    {{ form.name|add_class:"form-control" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.phone.id_for_label }}">Phone</label>
+                    {{ form.phone|add_class:"form-control" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email|add_class:"form-control" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.location.id_for_label }}">Location</label>
+                    {{ form.location|add_class:"form-control" }}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <!-- Fields for the second column -->
+                <div class="form-group mb-1">
+                    <label for="{{ form.current_ctc.id_for_label }}">Current CTC</label>
+                    {{ form.current_ctc|add_class:"form-control" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.expected_ctc.id_for_label }}">Expected CTC</label>
+                    {{ form.expected_ctc|add_class:"form-control" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.total_experience.id_for_label }}">Total Experience (In years)</label>
+                    {{ form.total_experience|add_class:"form-control" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.relevant_experience.id_for_label }}">Relevant Experience (In years)</label>
+                    {{ form.relevant_experience|add_class:"form-control" }}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <!-- Fields for the third column -->
+                <div class="form-group mb-1">
+                    <label for="{{ form.notice_period.id_for_label }}">Notice Period (In days)</label>
+                    {{ form.notice_period|add_class:"form-control" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.serving_notice_period.id_for_label }}">Serving Notice Period</label>
+                    {{ form.serving_notice_period|add_class:"form-control" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.last_working_day.id_for_label }}">Last Working Day</label>
+                    {{ form.last_working_day|add_class:"form-control" }}
+                </div>
+                <div class="form-group mb-1">
+                    <label for="{{ form.expected_joining_date.id_for_label }}">Expected Joining Date</label>
+                    {{ form.expected_joining_date|add_class:"form-control" }}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Full-width fields at the bottom -->
+        <div class="form-group mb-1">
+            <label for="{{ form.reason_for_change.id_for_label }}">Reason for Change</label>
+            {{ form.reason_for_change|add_class:"form-control" }}
+        </div>
+        <div class="form-group mb-1">
+            <label for="{{ form.linkedin_url.id_for_label }}">LinkedIn URL</label>
+            {{ form.linkedin_url|add_class:"form-control" }}
+        </div>
+        <div class="form-group mb-2">
+          <label for="{{ form.recruiter_notes.id_for_label }}">Recruiter Notes</label>
+          {{ form.recruiter_notes|add_class:"form-control"|attr:"rows:1" }}
+      </div>
+        <div class="form-group mb-2">
+            <label for="{{ form.cv.id_for_label }}">CV</label>
+            {{ form.cv|add_class:"form-control-file" }}
+        </div>
+
+        <div class="d-flex justify-content-between mt-2">
+            <button type="submit" class="btn btn-success">Add Candidate</button>
+            <a href="{% url 'candidates' %}" class="btn btn-danger">Back to candidates list</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

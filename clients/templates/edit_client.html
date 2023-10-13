@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Edit Client{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+  <div class="container">
+    <!-- Custom CSS class for styling -->
+    <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Edit Client: {{ client.name }}</a>
+
+  </div>
+</nav>
+  <div class="container">
+    <h1 class="my-3"></h1>
+  
+    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field|add_class:"form-control" }}
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+      <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="{% url 'clients' %}" class="btn btn-info">Back to clients list</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}
