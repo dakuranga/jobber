@@ -14,36 +14,52 @@
     margin-left: 68px; /* Adjust as needed to match the base.html navbar width */
   }
 </style>
+
 <header class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #4723D9;">
 
   <div class="container">
     <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Candidates</a>
     
-
-    <!-- Display the total number of candidates -->
-
     <form method="GET" action="{% url 'candidates' %}" class="form-inline ml-auto">
       <div class="form-group d-flex align-items-center">
+
+        <!-- Existing search field -->
         <input type="text" name="q" class="form-control" placeholder="Search name" value="{{ search_query }}">
+
+
+<!-- Date range filter -->
+        <input type="text" id="dateRange" name="date_range" class="form-control ml-2" placeholder="Select Date Range" value="{{ date_range }}">
+
+
+        <!-- New recruiter filter field -->
+        <input type="text" name="recruiter" class="form-control ml-2" value="{{ recruiter }}" placeholder="Recruiter Name">
+
+        <!-- Existing search button -->
         {% if search_query %}
         <a href="{% url 'candidates' %}" class="clear-search ml-2"><i class="fas fa-times-circle"></i></a>
         {% endif %}
-        <button type="submit" class="btn btn-light font-weight-bold ml-2">Search</button>
+        <button type="submit" class="btn btn-light font-weight-bold ml-2">Filter</button>
+
       </div>
     </form>
+
+    <!-- Existing buttons for import and add candidate -->
     <div class="ml-2">
       <a href="{% url 'import_candidate' %}" class="btn btn-light font-weight-bold">Import Candidate</a>
       <a href="{% url 'add_candidate' %}" class="btn btn-light font-weight-bold ml-2">Add Candidate</a>
     </div>
   </div>
 </header>
+
+
+
 <main class="table-container" style="margin-top: 70px;">
   {% if candidates %}
     <div class="table-responsive">
       <table class="table table-bordered">
         <thead class="thead-dark" style="background-color: #ffffff; color: #070707;">
           <tr>
-            <th>Sourced</th>
+            <th>Sourced </th>
             <th>Recruiter</th>
             <th>Name</th>
             <th>Email</th>
@@ -112,6 +128,8 @@
       No candidates found.
     </div>
   {% endif %}
+
+
 </main>
 
 <!-- Pagination Controls -->
@@ -127,5 +145,17 @@
   </ul>
 </div>
 <!-- End of Pagination Controls -->
+
+  
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function () {
+      flatpickr("#dateRange", {
+          mode: "range",
+          dateFormat: "Y-m-d",
+      });
+  });
+</script>
+
+
 
 {% endblock %}

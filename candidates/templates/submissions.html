@@ -11,13 +11,28 @@
 
       <form method="GET" action="{% url 'display_submissions' %}" class="form-inline ml-auto">
         <div class="form-group d-flex align-items-center">
-          <input type="text" name="q" class="form-control" placeholder="Search name" value="{{ search_query }}">
-          {% if search_query %}
-          <a href="{% url 'display_submissions' %}" class="clear-search ml-2"><i class="fas fa-times-circle"></i></a>
-          {% endif %}
-          <button type="submit" class="btn btn-light font-weight-bold ml-2">Search</button>
+            <input type="text" name="q" class="form-control" placeholder="Search" value="{{ search_query }}">
+
+            <input type="text" id="dateRange" name="date_range" class="form-control ml-2" placeholder="Select Date Range" value="{{ date_range }}">
+
+            <input type="text" name="recruiter" class="form-control ml-2" placeholder="Recruiter Name" value="{{ recruiter }}">
+            <select name="client" class="form-control ml-2">
+                <option value="">Select Client</option>
+                {% for client in clients %}
+                <option value="{{ client.id }}" {% if selected_client == client.id|stringformat:"s" %}selected{% endif %}>{{ client.name }}</option>
+                {% endfor %}
+            </select>
+            
+            <select name="stage" class="form-control ml-2">
+                <option value="">Select Stage</option>
+                {% for key, value in stages %}
+                    <option value="{{ key }}" {% if stage == key %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn btn-light font-weight-bold ml-2">Filter</button>
         </div>
-      </form>
+    </form>
 
     </div>
   </nav>
@@ -157,6 +172,18 @@
 
 
     
+</script>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        flatpickr('#dateRange', {
+            mode: 'range',
+            dateFormat: 'Y-m-d',
+            onChange: function(selectedDates, dateStr, instance) {
+                // If needed, you can do something when the date changes
+            }
+        });
+    });
 </script>
 
 {% endblock %}

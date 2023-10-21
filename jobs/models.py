@@ -74,14 +74,35 @@ class JobSubmission(models.Model):
 
     def __str__(self):
         return f"{self.candidate.name}"
-    
+
 
 
 from django.shortcuts import redirect, get_object_or_404
 from .models import JobSubmission
 
 def update_submission_stage(request, submission_id, stage):
+    print(f"Updating stage for submission ID {submission_id} to {stage}")
     submission = get_object_or_404(JobSubmission, id=submission_id)
-    submission.stage = stage
-    submission.save()
+    if submission.stage != stage:  # Check if the stage is actually changing
+        print(f"Stage is changing from {submission.stage} to {stage}")
+        submission.stage = stage
+        submission.save()
+        JobSubmissionHistory.objects.create(
+            job_submission=submission,
+            stage=stage,
+            changed_at=timezone.now()  # Record the current time
+        )
     return redirect('job_details', job_id=submission.job.id)
+
+
+from django.db import models
+from django.utils import timezone
+
+class JobSubmissionHistory(models.Model):
+    job_submission = models.ForeignKey(JobSubmission, related_name='histories', on_delete=models.CASCADE)
+    stage = models.CharField(max_length=20)
+    changed_at = models.DateTimeField()
+    
+
+    def __str__(self):
+        return f"Changed to {self.stage} at {self.changed_at}"

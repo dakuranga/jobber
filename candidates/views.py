@@ -6,31 +6,56 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from django.utils import timezone 
 from jobs.models import JobSubmission
+from django.utils import timezone
+from datetime import datetime, timedelta
 
+
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 def candidates(request):
-    
-    # Fetch and filter the candidates first.
-    query = request.GET.get('q', '')  # Get the search query from the URL parameter 'q' (default to empty string)
+    query = request.GET.get('q', '')
+    recruiter = request.GET.get('recruiter', '')
+    date_range = request.GET.get('date_range', '')
 
-    # If a query exists, filter candidates by name with partial matches using Q objects
+    candidates = Candidate.objects.all()
+
     if query:
-        candidates = Candidate.objects.filter(
-            Q(name__icontains=query)  # Case-insensitive partial match on 'name'
-        ).order_by('-created_at')
-    else:
-        candidates = Candidate.objects.order_by('-created_at')
-        
-    # Now paginate the filtered candidates.
-    paginator = Paginator(candidates, 20 )  # Show 10 candidates per page (you can change this number)
+        candidates = candidates.filter(Q(name__icontains=query) | Q(email__icontains=query))
+
+    if date_range:
+        try:
+            start_date_str, end_date_str = date_range.split(' to ')
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d') + timedelta(days=1)
+            
+            start_date = timezone.make_aware(start_date)
+            end_date = timezone.make_aware(end_date)
+
+            candidates = candidates.filter(created_at__range=(start_date, end_date))
+        except ValueError:
+            pass  # Handle the error
+
+    if recruiter:
+        candidates = candidates.filter(user__name__icontains=recruiter)
+
+    candidates = candidates.order_by('-created_at')
+
+    paginator = Paginator(candidates, 20)
     page_number = request.GET.get('page')
     candidates_page = paginator.get_page(page_number)
 
     context = {
-        'candidates': candidates_page,  # You should pass the paginated results to the context.
-        'search_query': query,  # Pass the search query back to the template
+        'candidates': candidates_page,
+        'search_query': query,
+        'date_range': date_range,
+        'recruiter': recruiter,
     }
+
     return render(request, 'candidates.html', context)
+
+
+
 
 from django.contrib import messages
 def add_candidate(request):
@@ -174,6 +199,9 @@ from interviews.models import Interview
 from django.utils import timezone
 from django.db import transaction
 from interviews.models import Interview
+from jobs.models import JobSubmission
+from jobs.models import JobSubmissionHistory
+
 
 def update_submission_stage(request, submission_id):
     submission = get_object_or_404(JobSubmission, id=submission_id)
@@ -185,6 +213,14 @@ def update_submission_stage(request, submission_id):
             if current_stage == "Client Submission":
                 submission.date_client_submitted = timezone.now()
             submission.save()
+
+            if submission.stage != current_stage:
+                # Create a JobSubmissionHistory record
+                JobSubmissionHistory.objects.create(
+                    job_submission=submission,
+                    stage=current_stage,
+                    changed_at=timezone.now()
+                )
 
             # Update interview records, if necessary
             interview_stages = ['L1 Interview', 'L2 Interview', 'L3 Interview']
@@ -239,22 +275,57 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 
 from django.db.models import Q
+from datetime import datetime, timedelta
+from django.utils import timezone
+from clients.models import Client
+from jobs.models import JobSubmission
 
 def display_submissions(request):
     submissions = JobSubmission.objects.all().order_by('-date_submitted')
-    query = request.GET.get('q', '')  # Get the search query from the URL parameter 'q' (default to empty string)
-    
-    # If a query exists, filter candidates by name with partial matches using Q objects
+    query = request.GET.get('q', '')
+    date_range = request.GET.get('date_range', '')
+    recruiter = request.GET.get('recruiter', '')
+    selected_client = request.GET.get('client', '')
+    stage = request.GET.get('stage', '') 
+
+    clients = Client.objects.all()  # Get all clients
+
+    if selected_client:
+        submissions = submissions.filter(job__client__id=selected_client)  # Adjust the field names as needed
+
+    if stage:
+        submissions = submissions.filter(stage=stage)
+
+    stages = JobSubmission.STAGE_CHOICES  # Get the stage choices
+
     if query:
         submissions = submissions.filter(
-        Q(candidate__name__icontains=query) |   # Assuming candidate's name is a field in another model linked by ForeignKey
-        Q(job__job_title__icontains=query) |    # Assuming job_title is a field in another model linked by ForeignKey
-        Q(job__client__name__icontains=query)   # Assuming client is a field in another model linked by ForeignKey and has a 'name' attribute
-    ).order_by('-date_submitted')
+            Q(candidate__name__icontains=query) |
+            Q(job__job_title__icontains=query) |
+            Q(job__client__name__icontains=query)
+        )
+
+    if date_range:
+        try:
+            start_date_str, end_date_str = date_range.split(' to ')
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date() + timedelta(days=1)
+            submissions = submissions.filter(date_submitted__range=(start_date, end_date))
+        except ValueError:
+            pass
+
+    if recruiter:
+        submissions = submissions.filter(candidate__user__name__icontains=recruiter)
 
     context = {
-        'submissions': submissions,  # You should pass the paginated results to the context.
-        'search_query': query,  # Pass the search query back to the template
+        'submissions': submissions,
+        'search_query': query,
+        'date_range': date_range,
+        'recruiter': recruiter,
+        'clients': clients,  # Pass the clients to the context
+        'selected_client': selected_client,
+        'stage': stage,   # Add selected stage to the context
+        'stages': stages
     }
 
     return render(request, 'submissions.html', context)

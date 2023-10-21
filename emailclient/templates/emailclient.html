@@ -10,6 +10,124 @@
     </div>
   </nav>
 
+  <div class="email-client">
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#" id="inbox-link">Inbox</a></li>
+            <li><a href="#" id="sent-link">Sent Items</a></li>
+        </ul>
+    </nav>
 
+    <!-- Inbox and Sent Items Sections -->
+    <div class="email-section" id="inbox">
+        <h2>Inbox</h2>
+        <!-- Dummy Inbox Emails -->
+        <div class="email">
+            <p class="email-sender">John Doe</p>
+            <p class="email-subject">Hello</p>
+            <p class="email-date">October 1, 2023</p>
+            <p class="email-message">Lorem ipsum...</p>
+        </div>
+        <div class="email">
+            <p class="email-sender">Jane Smith</p>
+            <p class="email-subject">Meeting</p>
+            <p class="email-date">October 2, 2023</p>
+            <p class="email-message">Lorem ipsum...</p>
+        </div>
+    </div>
+    <div class="email-section" id="sent">
+        <h2>Sent Items</h2>
+        <!-- Dummy Sent Items Emails -->
+        <div class="email">
+            <p class="email-recipient">Alice Johnson</p>
+            <p class="email-subject">Report</p>
+            <p class="email-date">October 3, 2023</p>
+            <p class="email-message">Lorem ipsum...</p>
+        </div>
+        <div class="email">
+            <p class="email-recipient">Bob Wilson</p>
+            <p class="email-subject">Updates</p>
+            <p class="email-date">October 4, 2023</p>
+            <p class="email-message">Lorem ipsum...</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Apply styles to the email client */
+    .email-client {
+        width: 800px;
+        margin: 0 auto;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Style the navigation menu */
+    nav ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    nav li {
+        display: inline;
+        margin-right: 20px;
+    }
+
+    /* Style the email sections (inbox and sent items) */
+    .email-section {
+        border: 1px solid #ccc;
+        padding: 20px;
+        display: none; /* Hide by default */
+    }
+
+    /* Style email headers */
+    h2 {
+        font-size: 20px;
+    }
+
+    /* Style individual emails */
+    .email {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 10px 0;
+    }
+
+    /* Style email fields */
+    .email-sender,
+    .email-recipient {
+        font-weight: bold;
+    }
+
+    .email-subject {
+        font-weight: bold;
+        color: #0078d4; /* Outlook-like blue for subject */
+    }
+
+    .email-date {
+        color: #666;
+    }
+
+    .email-message {
+        margin-top: 10px;
+    }
+</style>
+
+<script>
+    // JavaScript for navigation
+    const inboxLink = document.getElementById('inbox-link');
+    const sentLink = document.getElementById('sent-link');
+    const inboxSection = document.getElementById('inbox');
+    const sentSection = document.getElementById('sent');
+    
+    inboxLink.addEventListener('click', () => {
+        inboxSection.style.display = 'block';
+        sentSection.style.display = 'none';
+    });
+    
+    sentLink.addEventListener('click', () => {
+        inboxSection.style.display = 'none';
+        sentSection.style.display = 'block';
+    });
+</script>
 {% endblock %}
 

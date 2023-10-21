@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+{% load widget_tweaks %}
+{% block title %}Master Dashboard{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+  <div class="container d-flex justify-content-between align-items-center">  <!-- Added align-items-center for vertical alignment -->
+    
+    <!-- Home Button -->
+    <a href="{% url 'dashboard' %}" class="navbar-brand custom-title btn btn-outline-white" style="color: #ffffff; font-weight: bold;">
+      <i class="fas fa-home"></i> Home
+    </a>
+
+    <!-- Master Dashboard Button -->
+    <a href="{% url 'master_dashboard' %}" class="navbar-brand custom-title btn btn-outline-success" style="color: #ffffff; font-weight: bold;">
+      <i class="fas fa-tachometer-alt"></i> Master Dashboard
+    </a>
+
+    <div class="metrics-container d-flex align-items-center">
+      <div class="metric">
+          <span class="label"></span>
+          <span class=""></span>
+      </div>
+      <div class="metric">
+          <span class="label"></span>
+          <span class=""></span>
+      </div>
+    </div>
+    
+    <!-- Export Report Button, aligned to the right -->
+    <form method="get" class="ml-auto">  <!-- Added ml-auto to push it to the right -->
+      <a href="{% url 'export_custom_report' %}?{{ request.GET.urlencode }}" class="navbar-brand custom-title btn btn-outline-none" style="color: #ffffff; font-weight: bold;">
+        <i class="fas fa-download"></i> Export Report  <!-- Changed icon to download, feel free to use what suits -->
+      </a>
+    </form>
+
+    <!-- Company Name -->
+    <span class="text-white font-weight-bold ml-3">Linksoft Technology Solutions</span>  <!-- Added ml-3 for some spacing -->
+  </div>
+</nav>
+
+
+
+  <style>
+    .metrics-container {
+      flex: 1; /* make the metrics container take the maximum available width in the center */
+      justify-content: center; /* center the metrics horizontally */
+  }
+  
+  .metric {
+      display: flex; /* make the contents of the metric line up horizontally */
+      align-items: center; /* vertically align the circle and the number */
+      margin: 0 20px; /* space out the metrics */
+  }
+  
+  .label {
+      color: #ffffff;
+      margin-right: 15px; /* space between the label and the circle */
+  }
+  
+  .doughnut {
+      width: 35px;  /* increased the size to provide room for the doughnut effect */
+      height: 35px;
+      background-color: transparent;
+      border-radius: 50%; 
+      display: flex; 
+      justify-content: center;
+      align-items: center;
+      border: 3px solid white;  /* this gives the doughnut effect */
+      color: #ffffff;
+      font-weight: bold;
+  }
+  
+    .dashboard-container {
+      padding: 13px;
+      background-color: #ffffff;
+    }
+  
+    .section-container {
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 5px;
+      margin-bottom: 15px;
+    }
+  
+    .table-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+  
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 5px;
+    }
+  
+    table, th, td {
+      border: 2px solid #5c74c4;
+      text-align: left;
+    }
+  
+    th, td {
+      padding: 3px;
+    }
+  
+    th {
+      background-color: #ffffff;
+    }
+  
+    .list-group {
+      padding-left: 0;
+    }
+  
+    .list-group-item {
+      list-style: none;
+      margin: 2px 0;
+    }
+    .dashboard-table th:first-child,
+  .dashboard-table td:first-child {
+      width: 150px;  /* Adjust this value to the width you desire */
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;  /* Optional, to truncate content with an ellipsis if it's too long */
+      white-space: nowrap;  /* Optional, to prevent wrapping */
+  }
+  </style>
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+      <div class="col-md-12">
+        <h3 class="table-title" style="display: inline-block; background-color: #4723D9; color: #FFFFFF; padding: 5px;">All Data</h3>
+        <form method="get">
+          <label for="date_range">Select Date Range:</label>
+          <input type="text" id="date_range" name="date_range" value="" placeholder="Select Date Range" readonly>
+      
+          <button type="submit">Filter</button>
+          <a href="{% url 'master_dashboard' %}" class="btn btn-default">Clear Filters</a>
+          <a href="{% url 'master_dashboard_filter' date_filter='this_month' %}">This Month</a>
+      </form>
+
+
+
+
+
+      </form>
+        <table class="dashboard-table">
+            <tr>
+                <th>Recruiter</th>
+                <th>Sourced</th>
+                <th>Sub. Int.</th>
+                <th>QC Rejects</th>
+                <th>Sub. Ext.</th>
+                <th>Interviews Setup.</th>
+                <th>Int. Rejects</th>
+                <th>Shortlisted</th>
+                <th>Joined</th>
+            </tr>
+            {% for user_count in user_counts %}
+                <tr>
+                  <td>{{ user_count.user__name }}</td>
+                  <td>{{ user_count.sourced_count }}</td>
+                  <td>{{ user_count.internal_submissions_count }}</td>
+                  <td>{{ user_count.qc_reject_count }}</td>
+                  <td>{{ user_count.external_submissions_count }}</td>
+                  <td>{{ user_count.interviews_count }}</td>
+                  <td>{{ user_count.interview_reject_count }}</td>
+                  <td>{{ user_count.shortlisted_count }}</td>
+                  <td>{{ user_count.joined_count }}</td>
+                  
+
+
+                  
+
+
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+</div>
+</div>
+
+<script>
+  flatpickr("#date_range", {
+      mode: "range",
+      dateFormat: "Y-m-d",
+      disableMobile: "true" // Disable the native datepicker on mobile devices
+  });
+</script>
+{% endblock %}
