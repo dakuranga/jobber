@@ -3,6 +3,7 @@
 {% block title %}Job Detail{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
     <div class="container">
       <!-- Custom CSS class for styling -->
@@ -17,28 +18,12 @@
 <div class="container mt-4">
 
     <div class="row justify-content-center mt-4">
-        <div class="col-md-6 text-center">
-            <a href="{% url 'export_candidates_csv' %}" class="btn btn-primary btn-lg btn-block export-btn" data-toggle="tooltip" title="Download a CSV file with all the information of candidates">
-                <i class="fas fa-file-csv"></i> Export Candidates as CSV
-            </a>
-        </div>
-        <div class="col-md-6 text-center">
-            <a href="{% url 'export_candidates_zip' %}" class="btn btn-primary btn-lg btn-block export-btn" data-toggle="tooltip" title="Download a ZIP file with all the CV's in the database">
-                <i class="fas fa-file-archive"></i> Export Candidates as ZIP
-            </a>
-        </div>
     </div>
 
     <div class="row justify-content-center mt-4">
+
         <div class="col-md-6 text-center">
-         <a href="{% url 'export_jobs_csv' %}" class="btn btn-primary btn-lg btn-block export-btn" data-toggle="tooltip" title="Download a CSV file with all the information of jobs">
-            <i class="fas fa-file-csv"></i> Export Jobs as CSV
-         </a>
-        </div>
-        <div class="col-md-6 text-center">
-         <a href="{% url 'export_job_submissions_csv' %}" class="btn btn-primary btn-lg btn-block export-btn" data-toggle="tooltip" title="Download a CSV file with all the candidate submissions">
-            <i class="fas fa-file-csv"></i> Export Submissions as CSV
-            </a>
+
     </div>
 </div>
 
@@ -47,4 +32,57 @@
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
+
+
+<div class="tile is-ancestor">
+    <div class="tile is-vertical is-8">
+      <div class="tile">
+        <div class="tile is-parent is-vertical">
+          <article class="tile is-child notification is-primary">
+            <p class="title">Export Candidates as CSV...</p>
+            <a href="{% url 'export_candidates_csv' %}" class="btn btn-primary btn-lg btn-block export-btn" data-toggle="tooltip" title="Download a CSV file with all the information of candidates">
+                <i class="fas fa-file-csv"></i> 
+            </a>
+          </article>
+          <article class="tile is-child notification is-warning">
+            <p class="title">Export Jobs as CSV</p>
+            <a href="{% url 'export_jobs_csv' %}" class="btn btn-primary btn-lg btn-block export-btn" data-toggle="tooltip" title="Download a CSV file with all the information of jobs">
+                <i class="fas fa-file-csv"></i> 
+             </a>
+          </article>
+        </div>
+        <div class="tile is-parent">
+          <article class="tile is-child notification is-info">
+            <p class="title">Export Candidates as ZIP</p>
+            <a href="{% url 'export_candidates_zip' %}" class="btn btn-primary btn-lg btn-block export-btn" data-toggle="tooltip" title="Download a ZIP file with all the CV's in the database">
+                <i class="fas fa-file-archive"></i> 
+            </a>
+
+          </article>
+        </div>
+      </div>
+      <div class="tile is-parent">
+        <article class="tile is-child notification is-danger">
+          <p class="title">Upcoming Report</p>
+          <p class="subtitle">Next Release</p>
+          <div class="content">
+            <!-- Content -->
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="tile is-parent">
+      <article class="tile is-child notification is-success">
+        <div class="content">
+          <p class="title">Export Submissions as CSV</p>
+          <a href="{% url 'export_job_submissions_csv' %}" class="btn btn-primary btn-lg btn-block export-btn" data-toggle="tooltip" title="Download a CSV file with all the candidate submissions">
+            <i class="fas fa-file-csv"></i> 
+            </a>
+          <div class="content">
+            <!-- Content -->
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
 {% endblock %}

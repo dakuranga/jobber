@@ -14,7 +14,7 @@ def interviews(request):
     if query:
         interviews = interviews.filter(
         Q(submission__candidate__name__icontains=query) |   # Assuming candidate's name is a field in another model linked by ForeignKey
-        Q(submission__job__job_title__icontains=query)    # Assuming job_title is a field in another model linked by ForeignKey
+        Q(submission__job__job_title__icontains=query) | Q(user__name__icontains=query)   # Assuming job_title is a field in another model linked by ForeignKey
         )
     
     context = {
