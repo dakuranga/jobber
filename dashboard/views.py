@@ -333,6 +333,17 @@ def master_dashboard(request, date_filter=None):
         user_count['interview_reject_count'] = user_interview_rejected['interview_reject_count'] if user_interview_rejected else 0
         user_count['joined_count'] = user_joined['joined_count'] if user_joined else 0
         
+        if user_count['internal_submissions_count'] > 0:
+            reject_percentage = (user_count['qc_reject_count'] / user_count['internal_submissions_count']) * 100
+            user_count['quality_score'] = 100 - reject_percentage
+        else:
+            user_count['quality_score'] = 100 
+        
+        if user_count['interviews_count'] > 0:
+            success_rate = (user_count['shortlisted_count'] / user_count['interviews_count']) * 100
+            user_count['int_success_rate'] = success_rate
+        else:
+            user_count['int_success_rate'] = 0 
         
 
     request.session['user_counts'] = list(user_counts)

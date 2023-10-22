@@ -158,6 +158,8 @@
                 <th>Int. Rejects</th>
                 <th>Shortlisted</th>
                 <th>Joined</th>
+                <th>Sub. Quality.</th>
+                <th>Int. Success Rate</th>
             </tr>
             {% for user_count in user_counts %}
                 <tr>
@@ -170,6 +172,8 @@
                   <td>{{ user_count.interview_reject_count }}</td>
                   <td>{{ user_count.shortlisted_count }}</td>
                   <td>{{ user_count.joined_count }}</td>
+                  <td>{{ user_count.quality_score|floatformat:0 }}%</td>  <!-- Added a new column to display the quality score -->
+                  <td>{{ user_count.int_success_rate|floatformat:0 }}%</td>  <!-- Added a new cell to display Int. Success Rate -->
                   
 
 
