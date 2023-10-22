@@ -5,21 +5,37 @@ from .forms import InterviewDetailsForm
 from django.shortcuts import get_list_or_404, get_object_or_404
 import datetime
 from django.db.models import Q
+from clients.models import Client
 
 
 
 def interviews(request):
     interviews = Interview.objects.all()
     query = request.GET.get('q', '')  # Get the search query from the URL parameter 'q' (default to empty string)
+    recruiter_filter = request.GET.get('recruiter', '')  
+    client_filter = request.GET.get('client', '')
+
     if query:
         interviews = interviews.filter(
         Q(submission__candidate__name__icontains=query) |   # Assuming candidate's name is a field in another model linked by ForeignKey
-        Q(submission__job__job_title__icontains=query) | Q(user__name__icontains=query)   # Assuming job_title is a field in another model linked by ForeignKey
+        Q(submission__job__job_title__icontains=query)   # Assuming job_title is a field in another model linked by ForeignKey
         )
+    
+    if recruiter_filter:
+        interviews = interviews.filter(user__name__icontains=recruiter_filter)
+        
+    # Apply client filter if it exists
+    if client_filter:
+        interviews = interviews.filter(submission__job__client__id=client_filter)
+    
+    clients = Client.objects.all() 
     
     context = {
         'interviews': interviews,
         'search_query': query,
+        'recruiter_filter': recruiter_filter,
+        'client_filter': client_filter,
+        'clients': clients 
     }
     return render(request, 'interviews.html', context)
 

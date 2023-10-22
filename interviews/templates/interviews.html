@@ -5,21 +5,29 @@
 
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
     <div class="container">
-      <!-- Custom CSS class for styling -->
-      <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Interviews</a>
+        <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Interviews</a>
 
-      <form method="GET" action="{% url 'interviews' %}" class="form-inline ml-auto">
-        <div class="form-group d-flex align-items-center">
-          <input type="text" name="q" class="form-control" placeholder="Search name" value="{{ search_query }}">
-          {% if search_query %}
-          <a href="{% url 'interviews' %}" class="clear-search ml-2"><i class="fas fa-times-circle"></i></a>
-          {% endif %}
-          <button type="submit" class="btn btn-light font-weight-bold ml-2">Search</button>
-        </div>
-      </form>
+        <form method="GET" action="{% url 'interviews' %}" class="form-inline ml-auto">
+            <div class="form-group d-flex align-items-center">
+                <input type="text" name="q" class="form-control" placeholder="Candidate/Job" value="{{ search_query }}">
+                
+                <input type="text" name="recruiter" class="form-control ml-2" placeholder="Recruiter" value="{{ recruiter }}">
 
+                <select name="client" class="form-control ml-2">
+                    <option value="">Select Client</option>
+                    {% for client in clients %}
+                    <option value="{{ client.id }}" {% if client.id|stringformat:"s" == client_filter %}selected{% endif %}>{{ client.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit" class="btn btn-light font-weight-bold ml-2">Filter</button>
+                <a href="{% url 'interviews' %}" class="btn btn-light font-weight-bold ml-2">Clear</a>
+            </div>
+        </form>
     </div>
-  </nav>
+</nav>
+
+
 <style>
 .upcoming {
     color: green;
@@ -32,10 +40,11 @@
             <th>Sch. Date</th>
             <th>Candidate</th>
             <th>Job Title</th> 
-            <th>Mode</th>
-            
+            <th>Client</th> 
+
             <th>Int. Date</th>
             <th>Time</th>
+            <th>Mode</th>
             <th>Panel</th>
             <th>Feedback</th>
             <th>Recruiter</th>  <!-- New column header for Recruiter -->
@@ -51,12 +60,13 @@
                     <strong>{{ interview.submission.candidate.name }}</strong>
                 </span>
             </td>
-            <td><strong>{{ interview.submission.job.job_title }}</strong></td>
+            <td>{{ interview.submission.job.job_title }}</td>
+            <td>{{ interview.submission.job.client }}</td>
             
+            
+            <td>{{ interview.interview_date|date:"d-m-y" }} </td>
+            <td>{{ interview.interview_time }}</td>
             <td>{{ interview.mode }}</td>
-            
-            <td><strong>{{ interview.interview_date|date:"d-m-y" }}</strong> </td>
-            <td><strong>{{ interview.interview_time }}</strong></td>
             <td>{{ interview.interviewer }}</td>
             <td>{{ interview.calculated_feedback }}</td>
             <td>{{ interview.user.name }}</td> <!-- Display the username of the recruiter -->

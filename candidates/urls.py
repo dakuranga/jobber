@@ -16,6 +16,7 @@ urlpatterns = [
     path('candidates/import/', views.import_candidate, name='import_candidate'),
     path('submit_candidate_for_job/<int:job_id>/', views.submit_candidate_for_job, name='submit_candidate_for_job'),
     path('submissions/', views.display_submissions, name='display_submissions'),
+    path('export_submissions/', views.export_submissions, name='export_submissions'),
  
 
 ]

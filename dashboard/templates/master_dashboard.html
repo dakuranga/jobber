@@ -31,7 +31,7 @@
     
     <!-- Export Report Button, aligned to the right -->
     <form method="get" class="ml-auto">  <!-- Added ml-auto to push it to the right -->
-      <a href="{% url 'export_custom_report' %}?{{ request.GET.urlencode }}" class="navbar-brand custom-title btn btn-outline-none" style="color: #ffffff; font-weight: bold;">
+      <a href="{% url 'export_custom_report' %}?{{ request.GET.urlencode }}" class="navbar-brand custom-title btn btn-danger  btn-outline-none" style="color: #ffffff; font-weight: bold;">
         <i class="fas fa-download"></i> Export Report  <!-- Changed icon to download, feel free to use what suits -->
       </a>
     </form>

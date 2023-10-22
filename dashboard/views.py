@@ -185,6 +185,8 @@ from django.db.models import Count
 from candidates.models import Candidate
 from jobs.models import JobSubmission, JobSubmissionHistory
 from datetime import datetime
+from django.contrib.auth.decorators import login_required, user_passes_test
+
 
 def master_dashboard(request, date_filter=None):
     # Get the date range from the query parameters (if provided)
@@ -358,7 +360,8 @@ from io import BytesIO
 from django.shortcuts import redirect
 from django.contrib import messages
 
-
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def export_custom_report(request):
     # Get the data from session
     user_counts = request.session.get('user_counts', [])

@@ -271,14 +271,18 @@ def import_candidate(request):
 
 from datetime import datetime
 from django.http import JsonResponse
-
 from django.core.paginator import Paginator
-
 from django.db.models import Q
 from datetime import datetime, timedelta
 from django.utils import timezone
 from clients.models import Client
 from jobs.models import JobSubmission
+from django.http import HttpResponse
+import pandas as pd
+from io import BytesIO
+from django.forms.models import model_to_dict
+
+
 
 def display_submissions(request):
     submissions = JobSubmission.objects.all().order_by('-date_submitted')
@@ -317,6 +321,26 @@ def display_submissions(request):
     if recruiter:
         submissions = submissions.filter(candidate__user__name__icontains=recruiter)
 
+    submissions_list = [{
+    'Date Submitted': sub.date_submitted.strftime('%d-%m-%Y'),
+    'Candidate': sub.candidate.name,
+    'Job Title': sub.job.job_title,
+    'Email': sub.candidate.email,
+    'Phone': sub.candidate.phone,
+    'Client': sub.job.client.name,
+    'Serving Notice': sub.candidate.serving_notice_period,
+    'Availability': sub.candidate.expected_joining_date,
+    'ECTC': str(sub.candidate.expected_ctc), 
+    'CTC': str(sub.candidate.current_ctc), 
+    'Stage': sub.stage,  
+    'Location': sub.candidate.location,
+    'Notes': sub.candidate.recruiter_notes,
+    'Recruiter': sub.user.name,
+    # add other fields as needed
+} for sub in submissions]
+
+    request.session['submissions_data'] = submissions_list
+
     context = {
         'submissions': submissions,
         'search_query': query,
@@ -331,3 +355,46 @@ def display_submissions(request):
     return render(request, 'submissions.html', context)
 
 
+from django.http import HttpResponse
+import pandas as pd
+from io import BytesIO
+from django.shortcuts import redirect
+from django.contrib import messages
+from datetime import datetime
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def export_submissions(request):
+    # Get the submissions data from the session
+    submissions_data = request.session.get('submissions_data', [])
+
+    # Convert the list of dictionaries to a DataFrame
+    df = pd.DataFrame(submissions_data)
+
+    # Check if there is data to export
+    if not df.empty:
+        # Optional: Format the DataFrame as needed before exporting
+
+        # Write DataFrame to Excel file
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='Submissions')
+            
+            # Get the xlsxwriter workbook and worksheet objects
+            workbook = writer.book
+            worksheet = writer.sheets['Submissions']
+
+        excel_content = output.getvalue()
+
+        # Prepare the response with the Excel file
+        response = HttpResponse(
+            excel_content,
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        current_date = datetime.now().strftime("%Y-%m-%d")
+        response['Content-Disposition'] = f'attachment; filename={current_date}_Submissions.xlsx'
+
+        return response
+    else:
+        messages.error(request, "There is no data to export.")
+        return redirect('display_submissions')

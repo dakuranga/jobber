@@ -31,8 +31,14 @@
             </select>
 
             <button type="submit" class="btn btn-light font-weight-bold ml-2">Filter</button>
+
         </div>
+
     </form>
+    <form method="get" action="{% url 'export_submissions' %}">
+        <button type="submit" class="btn btn-danger font-weight-bold ml-3">Export</button>
+    </form>
+    
 
     </div>
   </nav>
