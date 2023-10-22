@@ -324,6 +324,7 @@ def display_submissions(request):
     submissions_list = [{
     'Date Submitted': sub.date_submitted.strftime('%d-%m-%Y'),
     'Candidate': sub.candidate.name,
+    'Resume': request.build_absolute_uri(sub.candidate.cv.url) if sub.candidate.cv else '',  # Add this line
     'Job Title': sub.job.job_title,
     'Email': sub.candidate.email,
     'Phone': sub.candidate.phone,
