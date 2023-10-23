@@ -156,3 +156,8 @@ AUTHENTICATION_BACKENDS = (
 
 LOGIN_URL = 'login'
 
+# Increase file upload max memory size to 100MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 100 * 1024 * 1024 
+
+# Increase data upload max memory size to 100MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 100 * 1024 * 1024 
