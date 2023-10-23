@@ -245,18 +245,23 @@ def import_candidate(request):
     if request.method == 'POST':
         form = CVImportForm(request.POST, request.FILES)
         if form.is_valid():
+            successful_imports = 0
+            existing_candidates = 0
+
             # Get the list of uploaded CVs
             for cv_file in request.FILES.getlist('cv'):
-                candidate = form.save(commit=False)
+                print("Processing CV:", cv_file.name)
+
                 parsed_data = extract_data_from_cv(cv_file)
-                
+                print("Parsed data:", parsed_data)
                 email = parsed_data.get("email", "")
                 existing_candidate = Candidate.objects.filter(email=email).first()
 
                 if existing_candidate:
-                    messages.warning(request, f"Candidate with email {email} already exists.")
-                    continue  # Skip this CV and move to the next one
-                
+                    existing_candidates += 1
+                    continue 
+
+                candidate = Candidate()  # Create a new instance here
                 candidate.name = parsed_data.get("name", "")
                 candidate.email = email
                 candidate.phone = parsed_data.get("phone", "")
@@ -264,10 +269,18 @@ def import_candidate(request):
                 candidate.user = request.user
                 candidate.save()
 
+                successful_imports += 1
+            
+            messages.success(
+                request,
+                f"{successful_imports} CV(s) imported successfully. {existing_candidates} already exist."
+            )
+
             return redirect('candidates')
     else:
         form = CVImportForm()
     return render(request, 'import_candidate.html', {'form': form})
+
 
 from datetime import datetime
 from django.http import JsonResponse

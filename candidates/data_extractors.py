@@ -54,6 +54,10 @@ def extract_data_from_cv(file):
     phones = extract_phones(text)
     phone = phones[0] if phones else ""
 
+    print("Extracted Name:", name)
+    print("Extracted Email:", email)
+    print("Extracted Phone:", phone)
+
     return {
         "name": name,
         "email": email,

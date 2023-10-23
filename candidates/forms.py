@@ -49,6 +49,11 @@ class CVImportForm(forms.ModelForm):
         model = Candidate
         fields = ['cv']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set the widget for the 'cv' field to allow multiple file uploads
+        self.fields['cv'].widget.attrs['multiple'] = True
+
 
 from django import forms
 from candidates.models import Candidate
