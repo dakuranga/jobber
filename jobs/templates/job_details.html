@@ -23,8 +23,8 @@
         <!-- Open days and jobs button to the right -->
         <div class="col-md-1 d-flex align-items-center justify-content-end">
             <span class="text-primary spacer-right mr-2"><i class="fas fa-clock"></i> {{ days_open }} Days</span>
-            <a href="{% url 'jobs' %}" class="btn btn-sm btn-danger enhanced-btn" style="margin-left: 15px;">
-                <i class="fas fa-arrow-left"></i>
+            <a href="{% url 'export_job_details_to_excel' job_id=job.id %}" class="btn btn-sm btn-success enhanced-btn" style="margin-left: 15px;">
+                Export
             </a>
         </div>
     </div>

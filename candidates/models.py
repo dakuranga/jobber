@@ -2,6 +2,9 @@ from django.db import models
 from django.conf import settings 
 
 
+from django.db import models
+
+
 
 class Candidate(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
@@ -22,6 +25,7 @@ class Candidate(models.Model):
     linkedin_url = models.CharField(max_length=200, blank=True, null=True, default=None)
     recruiter_notes = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
     
     
 

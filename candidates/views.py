@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 from datetime import datetime, timedelta
 from django.utils import timezone
 
+
 def candidates(request):
     query = request.GET.get('q', '')
     recruiter = request.GET.get('recruiter', '')
@@ -53,7 +54,6 @@ def candidates(request):
     }
 
     return render(request, 'candidates.html', context)
-
 
 
 

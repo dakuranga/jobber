@@ -308,6 +308,7 @@ def master_dashboard(request, date_filter=None):
         interviews_count=Count('id')
     )
 
+    
 
 
     # Merge the counts into the user_counts queryset
@@ -325,6 +326,8 @@ def master_dashboard(request, date_filter=None):
 
 
         user_count['internal_submissions_count'] = user_internal_submissions['internal_submissions_count'] if user_internal_submissions else 0
+
+
         user_count['qc_reject_count'] = user_qc_rejects['qc_reject_count'] if user_qc_rejects else 0
         user_count['external_submissions_count'] = user_external_submissions['external_submissions_count'] if user_external_submissions else 0
         user_count['interviews_count'] = user_interviews['interviews_count'] if user_interviews else 0
@@ -344,7 +347,11 @@ def master_dashboard(request, date_filter=None):
             user_count['int_success_rate'] = success_rate
         else:
             user_count['int_success_rate'] = 0 
+
         
+
+
+
 
     request.session['user_counts'] = list(user_counts)
 
@@ -377,11 +384,12 @@ def export_custom_report(request):
     # Get the data from session
     user_counts = request.session.get('user_counts', [])
 
-    # Convert the list of dictionaries to a DataFrame
+    # Convert the list of dictionaries to a DataFrames
     df = pd.DataFrame(user_counts)
 
     # Check if there is data to export
     if not df.empty:
+
         
         # Rename the columns based on the provided mapping
         df.rename(columns={
@@ -393,7 +401,9 @@ def export_custom_report(request):
             'interviews_count': '# Interviews Set',
             'shortlisted_count': '# Shortlisted',
             'interview_reject_count': '# Rejected In Interview',
-            'joined_count': '# Joined'
+            'joined_count': '# Joined',
+            'quality_score': 'Subs Quality',
+            'int_success_rate': 'Int. Success Rate',
         }, inplace=True)
 
         # Write DataFrame to Excel file

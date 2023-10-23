@@ -10,6 +10,8 @@ urlpatterns = [
     path('jobs/edit/<int:job_id>/', views.edit_job, name='edit_job'),
     path('jobs/delete/', views.delete_job, name='delete_job'),
     path('jobs/details/<int:job_id>/', views.job_details, name='job_details'),
+    path('jobs/details/<int:job_id>/export-excel/', views.export_job_details_to_excel, name='export_job_details_to_excel'),
+
 
 
 

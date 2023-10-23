@@ -155,3 +155,86 @@ def job_details(request, job_id):
     }
     
     return render(request, 'job_details.html', context)
+
+
+import pandas as pd
+from django.http import HttpResponse
+from io import BytesIO
+
+def export_job_details_to_excel(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    all_submissions = JobSubmission.objects.filter(job=job)
+
+    # Calculate the summary values
+    total_subs = all_submissions.count()
+    qc_rejects = all_submissions.filter(stage='QC Reject').count()
+    client_submission_stages = ['Client Submission', 'L1 Interview', 'L2 Interview', 'L3 Interview', 'Shortlisted', 'Interview Reject', 'Joined']
+    client_submissions = all_submissions.filter(stage__in=client_submission_stages).count()
+    interview_stages = ['L1 Interview', 'L2 Interview', 'L3 Interview', 'Shortlisted', 'Interview Reject', 'Joined']
+    total_interviews = all_submissions.filter(stage__in=interview_stages).values('candidate').distinct().count()
+    interview_rejects = all_submissions.filter(stage='Interview Reject').count()
+    shortlist_stages = ['Shortlisted', 'Joined']
+    total_shortlist = all_submissions.filter(stage__in=shortlist_stages).values('candidate').distinct().count()
+    joinings_stages = ['Joined']
+    total_joinings = all_submissions.filter(stage__in=joinings_stages).values('candidate').distinct().count()
+
+    # Create a Pandas DataFrame for the summary
+    summary_data = {
+        'Metric': ['Total Sourced', 'Screening Rejects', 'Candidates Submitted', 'Interviews Scheduled', 'Interview Rejects', '# Shortlist', 'Joinings'],
+        'Value': [total_subs, qc_rejects, client_submissions, total_interviews, interview_rejects, total_shortlist, total_joinings]
+    }
+    summary_df = pd.DataFrame(summary_data)
+
+    # Create a Pandas DataFrame for candidate details
+    candidate_data = []
+    for submission in all_submissions:
+        # Convert timezone-aware datetimes to timezone-unaware datetimes
+        date_submitted = submission.date_submitted.date() if submission.date_submitted else None
+        date_client_submitted = submission.date_client_submitted.date() if submission.date_client_submitted else None
+
+
+        candidate_data.append([
+            submission.candidate.name,
+            submission.stage,
+            date_submitted,
+            date_client_submitted,
+        ])
+
+    candidate_df = pd.DataFrame(candidate_data, columns=['Candidate Name', 'Stage', 'Submission Date', 'Client Submission Date'])
+
+    # Create an Excel writer object
+    output = BytesIO()
+
+    # Create a Pandas Excel writer using XlsxWriter as the engine
+    writer = pd.ExcelWriter(output, engine='xlsxwriter')
+
+    # Write summary data to the Excel file
+    summary_df.to_excel(writer, sheet_name='Job Summary', index=False)
+
+    # Write candidate details data to the Excel file
+    candidate_df.to_excel(writer, sheet_name='Candidate Details', index=False)
+
+    # Get the xlsxwriter workbook and worksheet objects
+    workbook = writer.book
+    worksheet = writer.sheets['Job Summary']
+
+    # Add comments with summary data to the Job Summary sheet
+    for i, value in enumerate(summary_df['Value']):
+        worksheet.write_comment(i + 1, 1, f'Value: {value}')
+
+    # Save the Pandas Excel writer to the BytesIO object
+    writer._save()
+
+    # Prepare the response for file download
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = f'attachment; filename={job.job_title}_details.xlsx'
+    output.seek(0)
+    response.write(output.read())
+
+    return response
+
+
+
+
+
+
