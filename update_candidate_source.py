@@ -1,12 +1,10 @@
-from django.core.management.base import BaseCommand
-from candidates.models import Candidate  # Update with your actual app name
+from candidates.models import Candidate
 
-class Command(BaseCommand):
-    help = 'Change the source field of all candidates to "recruiter"'
+# Get all candidates with source='application'
+candidates_to_update = Candidate.objects.filter(source='application')
 
-    def handle(self, *args, **kwargs):
-        try:
-            Candidate.objects.update(source='recruiter')
-            self.stdout.write(self.style.SUCCESS('Successfully updated source field to "recruiter" for all candidates.'))
-        except Exception as e:
-            self.stderr.write(self.style.ERROR(f'An error occurred: {str(e)}'))
+# Update the source for each candidate and save it
+for candidate in candidates_to_update:
+    candidate.source = 'recruiter'
+    candidate.save()
+
