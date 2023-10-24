@@ -159,11 +159,11 @@
                 </form>
             </div>
         </div>
-        {% if success_message %}
-        <div class="alert alert-success">
-            {{ success_message }}
-        </div>
-        {% endif %}
-    </div>
+        {% if request.GET.success_message %}
+<div class="alert alert-success">
+    {{ request.GET.success_message }}
+</div>
+{% endif %}
+
 </body>
 </html>

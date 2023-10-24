@@ -45,24 +45,6 @@ def job_listing(request):
     return render(request, 'job_listing.html', {'jobs': jobs})
 
 
-
-import PyPDF2
-
-def extract_text_from_pdf(pdf_file):
-    text = ""
-    try:
-        with open(pdf_file.path, "rb") as pdf_file:
-            pdf_reader = PyPDF2.PdfReader(pdf_file)
-            for page in pdf_reader.pages:
-                text += page.extract_text()
-    except Exception as e:
-        # Handle any exceptions that may occur during PDF extraction
-        text = "Error extracting text from PDF: " + str(e)
-    
-    return text
-
-
-
 from django.shortcuts import render, get_object_or_404
 from .models import JobListing
 from .forms import JobApplicationForm
@@ -71,8 +53,6 @@ import bleach
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-
-
 
 
 
@@ -106,7 +86,8 @@ def job_detail_and_apply(request, job_id):
             success_message = 'Your application has been submitted successfully.'
 
 
-            return HttpResponseRedirect(reverse('job_detail_and_apply', args=[job.job.id]))
+            return HttpResponseRedirect(reverse('job_listing') + '?success_message=' + success_message)
+
         
 
     else:
