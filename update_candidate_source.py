@@ -1,17 +1,22 @@
-from django.core.management.base import BaseCommand
-from candidates.models import Candidate  # Replace 'your_app' with your actual app name
+import os
+import django
 
-class Command(BaseCommand):
-    help = 'Update source field for all candidates from "application" to "recruiter"'
+# Set the DJANGO_SETTINGS_MODULE environment variable
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_project.settings")  # Replace 'your_project' with your actual project name
 
-    def handle(self, *args, **options):
-        # Get all candidates with source='application'
-        candidates_to_update = Candidate.objects.filter(source='application')
+# Initialize Django
+django.setup()
 
-        # Update the source for each candidate and save it
-        for candidate in candidates_to_update:
-            candidate.source = 'recruiter'
-            candidate.save()
+# Now you can import your models and run your update script
+from candidates.models import Candidate  # Replace 'candidates' with your app name
 
-        self.stdout.write(self.style.SUCCESS('Successfully updated source for candidates.'))
+# Your update script here
+# Get all candidates with source='application'
+candidates_to_update = Candidate.objects.filter(source='application')
 
+# Update the source for each candidate and save it
+for candidate in candidates_to_update:
+    candidate.source = 'recruiter'
+    candidate.save()
+
+print('Successfully updated source for candidates.')
