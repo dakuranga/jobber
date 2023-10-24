@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from candidates import Candidate  # Update with your actual app name
+from candidates.models import Candidate  # Update with your actual app name
 
 class Command(BaseCommand):
     help = 'Change the source field of all candidates to "recruiter"'
