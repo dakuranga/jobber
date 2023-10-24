@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers</title>
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .job-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .job-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 0 0 20px 0;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .job-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 7px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .job-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+
+        .job-location,
+        .job-mode {
+            font-size: 16px;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .apply-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .apply-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Center-align the Apply Now button */
+        .apply-button {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Careers @ Linksoft</h1>
+    </div>
+    <div class="container">
+        <ul class="job-list">
+            {% for job in jobs %}
+            <li class="job-item">
+                <h3 class="job-title">{{ job.job.job_title }}</h3>
+                <p class="job-location">Location: {{ job.job.job_location }}</p>
+                <p class="job-mode">Type: {{ job.job.job_mode }}</p>
+                <a class="apply-button" href="{% url 'job_detail_and_apply' job.job.id %}" target="_blank">View Details and Apply</a>
+
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

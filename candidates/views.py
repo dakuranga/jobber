@@ -12,12 +12,15 @@ from datetime import datetime, timedelta
 
 from datetime import datetime, timedelta
 from django.utils import timezone
+from user_management.models import CustomUser
 
 
 def candidates(request):
     query = request.GET.get('q', '')
     recruiter = request.GET.get('recruiter', '')
+
     date_range = request.GET.get('date_range', '')
+    source_filter = request.GET.get('source_filter', '') 
 
     candidates = Candidate.objects.all()
 
@@ -40,7 +43,15 @@ def candidates(request):
     if recruiter:
         candidates = candidates.filter(user__name__icontains=recruiter)
 
+    if source_filter:
+        if source_filter == 'sourced':
+            candidates = candidates.filter(source='recruiter')
+        elif source_filter == 'incoming':
+            candidates = candidates.filter(source='application')
+
     candidates = candidates.order_by('-created_at')
+
+
 
     paginator = Paginator(candidates, 20)
     page_number = request.GET.get('page')
@@ -74,6 +85,8 @@ def add_candidate(request):
 
             candidate = form.save(commit=False)
             candidate.user = request.user
+            candidate.source = 'recruiter'
+
             candidate.save()
             return redirect('candidates')
     else:
@@ -267,6 +280,8 @@ def import_candidate(request):
                 candidate.phone = parsed_data.get("phone", "")
                 candidate.cv = cv_file
                 candidate.user = request.user
+                candidate.source = 'recruiter'
+
                 candidate.save()
 
                 successful_imports += 1

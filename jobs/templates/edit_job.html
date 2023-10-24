@@ -3,6 +3,8 @@
 {% block title %}Edit Job{% endblock %}
 
 {% block content %}
+
+
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
   <div class="container">
     <!-- Custom CSS class for styling -->
@@ -63,6 +65,7 @@
                   <label for="{{ form.job_priority.id_for_label }}">Job Priority</label>
                   {{ form.job_priority|add_class:"form-control" }}
               </div>
+
           </div>
       </div>
       
@@ -72,9 +75,19 @@
           {{ form.job_description|add_class:"form-control" |attr:"rows:2" }}
       </div>
       <div class="form-group mb-2">
+        <label for="{{ form.job_notes.id_for_label }}">Job Notes</label>
+        {{ form.job_notes|add_class:"form-control" |attr:"rows:2" }}
+    </div>
+      <div class="form-group mb-2">
         <label for="{{ form.job_attachment.id_for_label }}">Job Attachment</label>
         {{ form.job_attachment|add_class:"form-control-file" }}
     </div>
+    <div class="form-group mb-1">
+        <label for="{{ form.minimum_experience.id_for_label }}">Minimum Experience (in years)</label>
+        {{ form.job_minimum_experience|add_class:"form-control" }}
+    </div>
+
+    
 
       <div class="d-flex justify-content-between mt-2">
           <button type="submit" class="btn btn-success">Edit Job</button>

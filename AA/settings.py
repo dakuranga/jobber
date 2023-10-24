@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'emailclient',
     'naukri',
     'settings',
+    'jobportal',
 
 ]
 

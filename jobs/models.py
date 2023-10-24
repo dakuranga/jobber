@@ -3,6 +3,7 @@ from clients.models import Client
 from candidates.models import Candidate
 from django.utils import timezone 
 
+
 class Job(models.Model):
     JOB_TYPE_CHOICES = [
         ('FT', 'FT'),
@@ -28,6 +29,7 @@ class Job(models.Model):
     id = models.AutoField(primary_key=True)
     job_title = models.CharField(max_length=100)
     job_description = models.TextField()
+    job_notes = models.TextField()
     job_location = models.CharField(max_length=100)
     job_mode = models.CharField(max_length=20, choices=MODE_CHOICES)
     job_status = models.CharField(max_length=20, choices=JOB_STATUS_CHOICES, default='Open')  
@@ -36,6 +38,7 @@ class Job(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     job_priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES)
     job_attachment = models.FileField(upload_to='job_attachments/', blank=True, null=True)
+    job_minimum_experience = models.PositiveIntegerField()
     date_added = models.DateTimeField(auto_now_add=True)
     candidates = models.ManyToManyField(Candidate, through='JobSubmission')
 
@@ -43,6 +46,8 @@ class Job(models.Model):
         return self.job_title
 
 
+
+    
 from user_management.models import CustomUser
 
 from jobs.models import Job
@@ -106,3 +111,8 @@ class JobSubmissionHistory(models.Model):
 
     def __str__(self):
         return f"Changed to {self.stage} at {self.changed_at}"
+    
+
+
+
+

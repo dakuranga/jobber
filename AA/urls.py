@@ -13,4 +13,5 @@ urlpatterns = [
     path('', include('emailclient.urls')),
     path('', include('naukri.urls')),
     path('', include('settings.urls')),
+    path('', include('jobportal.urls')),
 ]

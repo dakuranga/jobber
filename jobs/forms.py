@@ -5,6 +5,9 @@ from urllib.parse import urlencode
 
 
 class JobForm(forms.ModelForm):
+
+
+
     class Meta:
         model = Job
         fields = '__all__'
@@ -13,7 +16,11 @@ class JobForm(forms.ModelForm):
             'job_mode': forms.Select(choices=Job.MODE_CHOICES),
             'job_type': forms.Select(choices=Job.JOB_TYPE_CHOICES),  
             'job_priority': forms.Select(choices=Job.PRIORITY_CHOICES),
+            
+
         }
+
+        
 
     def __init__(self, *args, **kwargs):
         super(JobForm, self).__init__(*args, **kwargs)
@@ -28,6 +35,8 @@ class JobForm(forms.ModelForm):
             if not filename.endswith(('.doc', '.docx', '.pdf')):
                 raise ValidationError("Invalid file format. Please upload a Word or PDF document.")
         return job_attachment
+    
+
 
 
 class JobFilterForm(forms.Form):

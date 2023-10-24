@@ -79,6 +79,7 @@
                             <th>Date</th>
                             <th>Job Title</th>
                             <th>Status</th>
+                            <th>View</th>
                             <th>Priority</th>
                             <th>Client</th>
                             <th>Location</th>
@@ -88,6 +89,7 @@
                             <th>JD</th>
                             <th>Action</th>
                             <th>Submit</th>
+                            <th>Publish</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -96,6 +98,7 @@
                             <td>{{ job.date_added|date:"d/m/y" }}</td>
                             <td><a href="{% url 'job_details' job.id %}"><strong>{{ job.job_title }}</strong></a></td>
                             <td>{{ job.job_status }}</td>
+                            <td><a href="{% url 'view_job' job.id %}"><button>View</button></a></td>
                             <td>{{ job.job_priority }}</td>
                             <td>{{ job.client.code }}</td>
                             <td>{{ job.job_location }}</td>
@@ -119,6 +122,17 @@
                             </td>
                             <td><a href="{% url 'submit_candidate_for_job' job.id %}">Submit</a>
                             </td>
+                            <td><!-- Job Listing Template -->
+                                <div class="job-listing">
+                                    <!-- Other job details -->
+                                    {% if job.listing %}
+                                        <button class="unpublish-button" data-job-id="{{ job.id }}" data-state="published">Unpublish</button>
+                                    {% else %}
+                                        <button class="publish-button" data-job-id="{{ job.id }}" data-state="unpublished">Publish</button>
+                                    {% endif %}
+                                </div>
+                                
+                                </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -149,4 +163,34 @@
 
     </script>
 </div>
+<script>
+    // Add a click event listener for the Publish button
+    // Add a click event listener for the Publish/Unpublish button
+document.querySelectorAll('.publish-button, .unpublish-button').forEach(button => {
+    button.addEventListener('click', function () {
+        const jobId = this.getAttribute('data-job-id');
+        const currentState = this.getAttribute('data-state');
+
+        // Determine the action based on the current state
+        const action = currentState === 'published' ? 'unpublish' : 'publish';
+
+        fetch(`/${action}_job/${jobId}/`)
+            .then(response => response.json())
+            .then(data => {
+                // Update the button text based on the action
+                if (action === 'publish') {
+                    this.innerText = 'Unpublish';
+                    this.setAttribute('data-state', 'published');
+                } else if (action === 'unpublish') {
+                    this.innerText = 'Publish';
+                    this.setAttribute('data-state', 'unpublished');
+                }
+
+                alert(data.message);
+            });
+    });
+});
+
+</script>
+
 {% endblock %}

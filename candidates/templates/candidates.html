@@ -37,11 +37,19 @@
         <!-- New recruiter filter field -->
         <input type="text" name="recruiter" class="form-control ml-2" value="{{ recruiter }}" placeholder="Recruiter Name">
 
+        <!-- New source filter dropdown -->
+        <select name="source_filter" class="form-control ml-2">
+          <option value="" {% if source_filter == '' %}selected{% endif %}>CV Source</option>
+          <option value="sourced" {% if source_filter == 'sourced' %}selected{% endif %}>Sourced</option>
+          <option value="incoming" {% if source_filter == 'incoming' %}selected{% endif %}>Incoming</option>
+        </select>
+
         <!-- Existing search button -->
         {% if search_query %}
         <a href="{% url 'candidates' %}" class="clear-search ml-2"><i class="fas fa-times-circle"></i></a>
         {% endif %}
         <button type="submit" class="btn btn-light font-weight-bold ml-2">Filter</button>
+        <a href="{% url 'candidates' %}" class="btn btn-light font-weight-bold ml-2">Clear</a>
 
       </div>
 
@@ -83,15 +91,12 @@
       <table class="table table-bordered">
         <thead class="thead-dark" style="background-color: #ffffff; color: #070707;">
           <tr>
-            <th>Sourced </th>
+            <th>Created </th>
+            <th>Source </th>
             <th>Recruiter</th>
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>CTC</th>
-            <th>ECTC</th>
-            <th>On NP</th>
-            <th>LWD</th>
             <th>City</th>
             <th>CV</th>
             <th><i class="fas fa-share-alt"></i></th>
@@ -102,14 +107,11 @@
           {% for candidate in candidates %}
             <tr id="candidate-{{ candidate.id }}">
               <td>{{ candidate.created_at|date:"d-m" }}</td>
+              <td>{{ candidate.get_source_display }}</td>
               <td>{{ candidate.user.name|get_first_name }}</td>
               <td><a href="{% url 'candidate_details' candidate.id %}"><strong>{{ candidate.name }}</strong></a></td>
               <td>{{ candidate.email }}</td>
               <td>{{ candidate.phone }}</td>
-              <td>{{ candidate.current_ctc }}</td>
-              <td>{{ candidate.expected_ctc }}</td>
-              <td>{% if candidate.serving_notice_period %}Yes{% else %}No{% endif %}</td>
-              <td>{{ candidate.last_working_day }}</td>
               <td>{{ candidate.location }}</td>
               <td>
                 {% if candidate.cv %}

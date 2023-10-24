@@ -1,5 +1,8 @@
+import re
 from django.urls import reverse
 from django.shortcuts import redirect
+from django.http import HttpResponse
+
 
 class GlobalLoginRequiredMiddleware:
     """
@@ -7,7 +10,7 @@ class GlobalLoginRequiredMiddleware:
     except for the views in 'EXEMPT_URLS'.
     """
     EXEMPT_URLS = [
-        'login', 
+        'login', 'job_listing', 
     ]
 
     def __init__(self, get_response):
@@ -18,7 +21,10 @@ class GlobalLoginRequiredMiddleware:
             path = request.path_info
             exempt_urls = [reverse(url) for url in self.EXEMPT_URLS]
 
-            if path not in exempt_urls and not path.startswith('/admin/'):
+            
+            if path in exempt_urls or path.startswith('/admin/') or ('jobs-at-linksoft' in path and path.endswith('/apply/')):
+                pass  # Allow access without authentication
+            else:
                 return redirect('login')
 
         response = self.get_response(request)

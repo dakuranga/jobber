@@ -26,6 +26,16 @@ class Candidate(models.Model):
     recruiter_notes = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    SOURCE_CHOICES = [
+        ('recruiter', 'Sourced'),
+        ('application', 'Incoming'),
+    ]
+    source = models.CharField(
+        max_length=20,
+        choices=SOURCE_CHOICES,
+        default='recruiter',  
+    )
+
     
     
 
