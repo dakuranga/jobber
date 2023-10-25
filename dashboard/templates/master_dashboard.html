@@ -5,6 +5,8 @@
 {% block title %}Master Dashboard{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
   <div class="container d-flex justify-content-between align-items-center">  <!-- Added align-items-center for vertical alignment -->
     
@@ -142,10 +144,6 @@
           <a href="{% url 'master_dashboard_filter' date_filter='this_month' %}">This Month</a>
       </form>
 
-
-
-
-
       </form>
         <table class="dashboard-table">
             <tr>
@@ -183,7 +181,7 @@
 </div>
 </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
   flatpickr("#date_range", {
       mode: "range",

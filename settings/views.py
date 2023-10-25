@@ -20,8 +20,6 @@ def settings(request):
 
     return render(request, 'settings.html', context)
 
-
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
