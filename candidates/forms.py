@@ -9,6 +9,8 @@ class CandidateForm(forms.ModelForm):
         required=False, 
         widget=forms.Select(choices=[(True, 'Yes'), (False, 'No')])
     )
+    source = forms.CharField(initial='recruiter', required=False)
+
 
 
     def clean_cv(self):

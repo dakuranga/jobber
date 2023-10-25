@@ -1,17 +1,11 @@
-from django.shortcuts import render, redirect
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Candidate
+from jobs.models import JobSubmission
 from .forms import CandidateForm
 from django.db.models import Q 
 from django.core.paginator import Paginator
 from django.utils import timezone 
-from jobs.models import JobSubmission
-from django.utils import timezone
 from datetime import datetime, timedelta
-
-
-from datetime import datetime, timedelta
-from django.utils import timezone
 from user_management.models import CustomUser
 
 
@@ -103,10 +97,17 @@ def edit_candidate(request, candidate_id):
     candidate = get_object_or_404(Candidate, id=candidate_id)
     if request.method == 'POST':
         form = CandidateForm(request.POST, request.FILES, instance=candidate)
+        if not form.is_valid():
+                print(form.errors)
+
         if form.is_valid():
+            form.instance.source = 'recruiter' 
             form.instance.user = request.user
             form.save()
+            print("Form saved successfully!")
             return redirect('candidates')
+        else:
+            print("Form is invalid!") 
     else:
         form = CandidateForm(instance=candidate)
     return render(request, 'edit_candidate.html', {'form': form})

@@ -1,9 +1,25 @@
 from django.shortcuts import render
 from user_management.models import CustomUser  
+from emailclient.models import UserEmail
+from requests_oauthlib import OAuth2Session
+from django.http import HttpResponse
+from emailclient.views import check_and_refresh_token
+from django.conf import settings as django_settings
+from datetime import datetime
+
+
+
+from emailclient.models import UserEmail
 
 def settings(request):
     users = CustomUser.objects.all()  # Use your CustomUser model
-    return render(request, 'settings.html', {'users': users})
+
+    context = {
+        'users': users,
+    }
+
+    return render(request, 'settings.html', context)
+
 
 
 from django.contrib.auth import get_user_model
@@ -54,6 +70,8 @@ def delete_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     user.delete()
     return redirect('settings')
+
+
 
 
 

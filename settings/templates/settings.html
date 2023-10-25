@@ -1,87 +1,133 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load widget_tweaks %}
+
 {% block title %}Settings{% endblock %}
+
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+
+<style>
+    .custom-navbar {
+        background-color: #4723D9;
+        color: #ffffff;
+        padding: 1rem 2rem;
+    }
+
+    .card-container {
+        margin-top: 2rem;
+    }
+
+    .accordion-header {
+        cursor: pointer;
+    }
+
+    .accordion-content {
+        display: none;
+        overflow: hidden;
+    }
+
+    .accordion-header.is-active + .accordion-content {
+        display: block;
+    }
+</style>
+
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
-    <div class="container d-flex justify-content-between align-items-center">
-        <!-- Settings aligned left -->
+    <div class="container">
         <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Settings</a>
-        
-        <!-- Both buttons aligned right and adjacent to each other -->
-        <div>
-            <a href="{% url 'create_user' %}" class="btn btn-light font-weight-bold {% if not request.user.is_superuser %}disabled{% endif %}">Add User</a>
-            <a href="#" class="btn btn-light font-weight-bold">Add Sending Email</a>
-        </div>
+
+            <div class="level-right">
+                <div class="level-item">
+                    <a href="{% url 'create_user' %}" class="button is-light {% if not request.user.is_superuser %}is-disabled{% endif %}">Add User</a>
+                </div>
+                <div class="level-item">
+                    <a href="{% url 'auth_gmail' %}" class="button is-light">Add Email</a>
+                </div>
+            </div>
+
     </div>
 </nav>
-      <div class="container mt-4">
-        <div class="row">
-            <!-- First major column -->
-            <div class="col-md-7">
-                <h3 class="mt-1">TA Team</h3>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Is Active</th>
-                        <th>Is Manager</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in users %}
-                    <tr>
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.is_active }}</td>
-                        <td>{{ user.is_superuser }}</td>
-                        <td>
-                            <a href="{% url 'edit_user' user.id %}" class="btn btn-primary btn-sm {% if not request.user.is_superuser %}disabled{% endif %}">Edit</a>
-                            <a href="{% url 'delete_user' user.id %}" class="btn btn-danger btn-sm {% if not request.user.is_superuser %}disabled{% endif %}">Delete</a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5">No users available</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+
+    <div class="container card-container">
+ 
+        <div class="box mt-4">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <h5 class="title is-5">Talent Acquisition Team</h5>
+            </div>
+
+            <div class="accordion-content">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Is Active</th>
+                            <th>Is Manager</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.is_active }}</td>
+                            <td>{{ user.is_superuser }}</td>
+                            <td>
+                                <a href="{% url 'edit_user' user.id %}" class="btn btn-primary btn-sm {% if not request.user.is_superuser %}disabled{% endif %}">Edit</a>
+                                <a href="{% url 'delete_user' user.id %}" class="btn btn-danger btn-sm {% if not request.user.is_superuser %}disabled{% endif %}">Delete</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5">No users available</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-
-    <!-- Second major column -->
-    <div class="col-md-5">
-        <h3 class="mt-1">Your Sending Email</h3>
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <!-- Column headings for the second table -->
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Rows for the second table. You can loop through your data just like in the first table -->
-                    <!-- Example: -->
-                    <tr>
-                        <td>example@example.com</td>
-                        <td>Active</td>
-                        <td>
-                            <a href="#" class="btn btn-primary btn-sm">Edit</a>
-                            <a href="#" class="btn btn-danger btn-sm">Delete</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <!-- Your Profile Card -->
+    <div class="box mt-4">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+            <h5 class="title is-5">Sender Email Address</h5>
+        </div>
+        <div class="accordion-content">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ name }}</td>
+                            <td>{{ email }}</td>
+                            <td>
+                                <a href="{% url 'revoke_google_oauth' %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to remove the email address used to send emails?');">Delete</a>
+    
+                            </td>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-</div>
-    {% endblock %}
+<script>
+        function toggleAccordion(element) {
+            const content = element.nextElementSibling;
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+            } else {
+                content.style.display = 'block';
+            }
+        }
+    </script>
+
+
+{% endblock %}

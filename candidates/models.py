@@ -1,10 +1,6 @@
 from django.db import models
 from django.conf import settings 
-
-
 from django.db import models
-
-
 
 class Candidate(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
@@ -32,14 +28,10 @@ class Candidate(models.Model):
     ]
     source = models.CharField(
         max_length=20,
-        choices=SOURCE_CHOICES,
+        choices=SOURCE_CHOICES, 
         default='recruiter',  
     )
 
-    
-    
-
-   
     def __str__(self):
         return self.name
 

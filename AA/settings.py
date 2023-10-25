@@ -49,6 +49,12 @@ INSTALLED_APPS = [
     'naukri',
     'settings',
     'jobportal',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+
+
 
 ]
 
@@ -61,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'AA.middleware.GlobalLoginRequiredMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'AA.urls'
@@ -146,14 +153,25 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+import os
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
+
 # hireninja/settings.py
 
 AUTH_USER_MODEL = 'user_management.CustomUser'
 
 AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',  # Keep this for admin access
 
 )
+
+
+GOOGLE_OAUTH2_CLIENT_ID = '743922830258-v7ngvil089u2n5i0ogr6kvecttrrg2p7.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET = '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'
+
 
 LOGIN_URL = 'login'
 
