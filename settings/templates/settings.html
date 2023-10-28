@@ -1,133 +1,126 @@
 {% extends 'base.html' %}
-{% load static %}
-{% load widget_tweaks %}
-
-{% block title %}Settings{% endblock %}
-
+{% block title %}Job Detail{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
 
 <style>
-    .custom-navbar {
-        background-color: #4723D9;
-        color: #ffffff;
-        padding: 1rem 2rem;
-    }
+.is-bordered {
+    border: 4px solid #524a4a; /* Set the border width and color */
+    padding: 10px; /* Add padding for spacing between content and border */
+}
 
-    .card-container {
-        margin-top: 2rem;
-    }
 
-    .accordion-header {
-        cursor: pointer;
-    }
+.email-settings-card {
+    padding: 15px; /* Add padding for spacing between content and border */
+    border: 2px solid #ccc; /* Border styling */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2); /* Box shadow effect */
+    background-color: #f9f9f9; /* Background color */
+}
 
-    .accordion-content {
-        display: none;
-        overflow: hidden;
-    }
+.email-settings-card .title {
+    font-size: 1.5rem; /* Larger title font size */
+    margin-bottom: 10px; /* Spacing below title */
+}
 
-    .accordion-header.is-active + .accordion-content {
-        display: block;
-    }
+.email-settings-card .email-icon {
+    color: #3498db; /* Icon color */
+}
+
+.email-settings-card ul {
+    margin-top: 10px; /* Spacing between text and icon */
+}
+
+.email-settings-card ul li {
+    font-size: 1.2rem; /* Larger text font size */
+    margin-bottom: 5px; /* Spacing between list items */
+}
+
 </style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+
 
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
     <div class="container">
-        <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Settings</a>
-
-            <div class="level-right">
-                <div class="level-item">
-                    <a href="{% url 'create_user' %}" class="button is-light {% if not request.user.is_superuser %}is-disabled{% endif %}">Add User</a>
-                </div>
-                <div class="level-item">
-                    <a href="{% url 'auth_gmail' %}" class="button is-light">Add Email</a>
-                </div>
-            </div>
-
+      <!-- Custom CSS class for styling -->
+      <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Settings</a>
     </div>
-</nav>
+  </nav>
 
-    <div class="container card-container">
- 
-        <div class="box mt-4">
-            <div class="accordion-header" onclick="toggleAccordion(this)">
-                <h5 class="title is-5">Talent Acquisition Team</h5>
-            </div>
-
-            <div class="accordion-content">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Is Active</th>
-                            <th>Is Manager</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user in users %}
-                        <tr>
-                            <td>{{ user.name }}</td>
-                            <td>{{ user.email }}</td>
-                            <td>{{ user.is_active }}</td>
-                            <td>{{ user.is_superuser }}</td>
-                            <td>
-                                <a href="{% url 'edit_user' user.id %}" class="btn btn-primary btn-sm {% if not request.user.is_superuser %}disabled{% endif %}">Edit</a>
-                                <a href="{% url 'delete_user' user.id %}" class="btn btn-danger btn-sm {% if not request.user.is_superuser %}disabled{% endif %}">Delete</a>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5">No users available</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    <!-- Your Profile Card -->
-    <div class="box mt-4">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-            <h5 class="title is-5">Sender Email Address</h5>
-        </div>
-        <div class="accordion-content">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{{ name }}</td>
-                            <td>{{ email }}</td>
-                            <td>
-                                <a href="{% url 'revoke_google_oauth' %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to remove the email address used to send emails?');">Delete</a>
-    
-                            </td>
-                            
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  <div class="container mt-5">
+    <div class="row justify-content-center mt-8">
+        <div class="col-md-6 text-center">
     </div>
 </div>
-<script>
-        function toggleAccordion(element) {
-            const content = element.nextElementSibling;
-            if (content.style.display === 'block') {
-                content.style.display = 'none';
-            } else {
-                content.style.display = 'block';
-            }
-        }
-    </script>
 
 
+<div class="tile is-ancestor">
+    <div class="tile is-vertical is-8">
+      <div class="tile">
+        <div class="tile is-parent is-vertical">
+          <article class="tile is-child notification is-white is-bordered email-settings-card">
+            <p class="title">Team</p>
+            <ul>
+                <li><a href="{% url 'user_list' %}">Team Members</a></li>
+
+
+            </ul>
+          </article>
+          <article class="tile is-child notification is-white is-bordered email-settings-card">
+            <p class="title">User Settings</p>
+
+                <ul>
+                  <li><a href="{% url 'my_profile' %}">My Profile</a></li>
+                    <li>Time Zone</li>
+                </ul>
+
+          </article>
+        </div>
+        <div class="tile is-parent">
+          <article class="tile is-child notification is-white is-bordered email-settings-card">
+            <p class="title">Email Templates</p>
+
+                <ul>
+                    <li><a href="{% url 'list_email_templates' %}">View Templates</a></li>
+                    <li><a href="{% url 'create_email_template' %}">Add Template</a></li>
+                </ul>
+
+          </article>
+        </div>
+        
+      </div>
+
+      <div class="tile is-parent">
+        <article class="tile is-child notification is-white is-bordered email-settings-card">
+          <p class="title">Calls </p>
+            <ul>
+                <li>Numbers</li>
+                <li>Recording</li>
+                <li>Text Messaging</li>
+                <li>Default Country Code</li>
+            </ul>
+        </article>
+      </div>
+      
+    </div>
+
+    <div class="tile is-parent">
+      <article class="tile is-child notification is-white is-bordered email-settings-card">
+          <p class="title">Email Settings</p>
+          <ul>
+            <li><a href="{% url 'email_accounts' %}">Email Account</a></li>
+            <li><a href="{% url 'email_signature_list' %}">Email Signatures</a></li>
+            <li>Default Font</li>
+            </ul>
+        </div>
+      </article>
+    </div>
+
+  </div>
+
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% endblock %}
+

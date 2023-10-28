@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Create Email Signature{% endblock %}
+
+{% block additional_css %}
+<style>
+    .form-container {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-title {
+        font-size: 24px;
+    }
+
+    .custom-nav {
+        background-color: #4723D9;
+    }
+
+    .cke_chrome {
+        width: 100% !important;
+    }
+
+    .full-width {
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+    <div class="container">
+        <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">{% if is_edit %}Edit{% else %}Create{% endif %} Email Template</a>
+    </div>
+  </nav>
+
+<script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-primary mb-3">
+                <div class="card-body form-container">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="{{ form.name.id_for_label }}">Name</label>
+                            {{ form.name|add_class:"form-control full-width" }}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.content.id_for_label }}">Signature Body</label>
+                            <div>
+                                {{ form.content|add_class:"full-width" }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group text-right">
+                            <button type="submit" class="btn btn-primary">{% if is_edit %}Update{% else %}Create{% endif %} Signature</button>
+                            <a href="{% url 'settings' %}" class="btn btn-secondary ml-2">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    CKEDITOR.replace('id_content');  // This assumes the id of the textarea is 'id_content'. Adjust if necessary.
+</script>
+
+{% endblock %}

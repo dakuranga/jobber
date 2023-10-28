@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Team Members{% endblock %}
+
+{% block content %}
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+    <div class="container">
+        <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">Team Members</a>
+
+            <div class="level-right">
+                <div class="level-item">
+                    <a href="{% url 'create_user' %}" class="button is-secondary {% if not request.user.is_superuser %}is-disabled{% endif %}" style="font-weight: bold; color: white;">Add User</a>
+                </div>
+            </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="accordion-content">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Is Active</th>
+                    <th>Is Manager</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.is_active }}</td>
+                    <td>{{ user.is_superuser }}</td>
+                    <td>
+                        <a href="{% url 'edit_user' user.id %}" class="btn btn-primary btn-sm {% if not request.user.is_superuser %}disabled{% endif %}">Edit</a>
+                        <a href="{% url 'delete_user' user.id %}" class="btn btn-danger btn-sm {% if not request.user.is_superuser %}disabled{% endif %}">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No users available</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div
+
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}

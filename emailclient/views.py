@@ -122,3 +122,5 @@ def revoke_google_integration(request):
         messages.warning(request, "No Google integration found for this user.")
 
     return redirect('settings')  # Redirect back to the settings page
+
+

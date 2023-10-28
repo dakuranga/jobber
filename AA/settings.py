@@ -53,10 +53,17 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-
-
-
+    'ckeditor',
+    'ckeditor_uploader', 
+    'attachments',
 ]
+
+
+
+
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -173,6 +180,8 @@ GOOGLE_OAUTH2_CLIENT_ID = '743922830258-v7ngvil089u2n5i0ogr6kvecttrrg2p7.apps.go
 GOOGLE_OAUTH2_CLIENT_SECRET = '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'
 
 
+
+
 LOGIN_URL = 'login'
 
 # Increase file upload max memory size to 100MB
@@ -180,3 +189,41 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 100 * 1024 * 1024
 
 # Increase data upload max memory size to 100MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 100 * 1024 * 1024 
+
+CKEDITOR_UPLOAD_PATH = "ckeditor/uploads/"
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'skin': 'moono-lisa',  # the default skin
+        'fontSize_sizes': '8/8px;9/9px;10/10px;11/11px;12/12px;14/14px;16/16px;18/18px;20/20px;22/22px;24/24px;26/26px;28/28px;30/30px;32/32px;34/34px;36/36px',
+        'toolbar_Basic': [
+            ['Source', '-', 'Bold', 'Italic']
+        ],
+        'toolbar_Full': [
+            ['Styles', 'Format', 'Font', 'FontSize'],
+            ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'],
+            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink', 'Anchor'],
+            ['Image', 'Flash', 'Table', 'HorizontalRule', 'SpecialChar', 'Iframe'],
+            ['TextColor', 'BGColor'],
+            ['Maximize', 'ShowBlocks'],
+            ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
+        ],
+        'toolbar': 'Full',  # set the toolbar to use the "Full" toolbar we defined above
+        'height': 300,
+        'width': '100%',
+        'filebrowserWindowWidth': 800,
+        'filebrowserWindowHeight': 500,
+        'filebrowserUploadUrl': '/ckeditor/upload/',
+        'filebrowserBrowseUrl': '/ckeditor/browse/',
+        'removePlugins': 'elementspath',
+        'resize_enabled': True,
+        'extraPlugins': 'autogrow,divarea',
+        'autoGrow_minHeight': 200,
+        'autoGrow_maxHeight': 800,
+        'autoGrow_bottomSpace': 10,
+        'forcePasteAsPlainText': True,  # force pasted text to be plain
+        'contentsCss': ['/static/css/ckeditor.css']  # custom styles for the editor content
+    },
+}

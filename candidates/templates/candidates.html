@@ -30,7 +30,7 @@
         <input type="text" name="q" class="form-control" placeholder="Search name" value="{{ search_query }}">
 
 
-<!-- Date range filter -->
+        <!-- Date range filter -->
         <input type="text" id="dateRange" name="date_range" class="form-control ml-2" placeholder="Select Date Range" value="{{ date_range }}">
 
 
@@ -54,12 +54,11 @@
       </div>
 
     </form>
-
-    <!-- Existing buttons for import and add candidate -->
     <div class="ml-2">
       <a href="{% url 'import_candidate' %}" class="btn btn-light font-weight-bold">Import Candidate</a>
       <a href="{% url 'add_candidate' %}" class="btn btn-light font-weight-bold ml-2">Add Candidate</a>
     </div>
+
   </div>
 </header>
 

@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% load widget_tweaks %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.2/css/all.min.css">
+
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+    <div class="container">
+        <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">My Profile</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="profile-card">
+                <div class="profile-picture-container">
+                    {% if request.user.profile_picture %}
+                    <img src="{{ request.user.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+                    {% else %}
+                    <img src="{% static 'default_profile_pic.jpg' %}" alt="Default Profile Picture" class="profile-picture">
+                    {% endif %}
+                    <div class="edit-icon" onclick="document.getElementById('profilePicInput').click();">
+                        <i class="fa fa-pencil-alt"></i>
+                    </div>
+                </div>
+                <h2 class="profile-name">{{ request.user.name }}</h2>
+                <p class="profile-email">{{ request.user.email }}</p>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="d-none">
+                {% csrf_token %}
+                {{ form.profile_picture|add_class:"d-none"|attr:"id:profilePicInput" }} 
+                <button type="submit" id="submitPicButton"></button>
+            </form>
+            
+        </div>
+
+        <div class="col-lg-8">
+            <div class="profile-details">
+                <h3>About Me</h3>
+                <p class="about-me-placeholder">
+                    Technical Recruiter with 5 years of experience - Expert at hiring Backend Developers.
+                </p>
+
+                <h3 class="mt-4">Other Details</h3>
+                <p class="other-details-placeholder">
+                    Job: <span>Talent Acquisition Specialist</span><br>
+                    Location: <span>New Delhi, India</span><br>
+                    Member Since: <span>2023</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-card {
+        text-align: center;
+        background-color: #eceaea;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .profile-picture {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin-bottom: 15px;
+    }
+
+    .profile-name {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .profile-email {
+        font-size: 18px;
+        color: #000000;
+    }
+
+    .edit-icon {
+        z-index: 10;
+        cursor: pointer; /* Add cursor pointer on hover */
+    }
+
+    .edit-icon:hover {
+        color: #007bff; /* Change the color on hover, you can adjust the color code as needed */
+    }
+
+    .about-me-placeholder,
+    .other-details-placeholder {
+        font-size: 16px;
+        line-height: 1.5;
+        background-color: #f5f5f5;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .other-details-placeholder span {
+        font-weight: bold;
+        color: #000000;
+    }
+</style>
+
+
+<script>
+    // Add this script to trigger the form submission once a file is selected
+    document.getElementById('profilePicInput').addEventListener('change', function() {
+        document.getElementById('submitPicButton').click();
+    });
+</script>
+
+{% endblock %}

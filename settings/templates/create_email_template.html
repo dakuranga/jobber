@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block additional_css %}
+
+<style>
+    .form-container {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        border-bottom: 2px solid #343a40;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    /* Ensuring the CKEditor textarea has the same width as other fields */
+    .cke_chrome {
+        width: 100% !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4723D9;">
+  <div class="container">
+      <a class="navbar-brand custom-title" style="color: #ffffff; font-weight: bold;">{% if is_edit %}Edit{% else %}Create{% endif %} Email Template</a>
+  </div>
+</nav>
+<script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+
+<div class="container mt-5">
+    <div class="form-container">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.name.label_tag }} {{ form.name|add_class:"form-control" }}
+            </div>
+            <div class="form-group">
+                {{ form.subject.label_tag }} {{ form.subject|add_class:"form-control" }}
+            </div>
+            <div class="form-group">
+                {{ form.body.label_tag }}
+                <div>
+                    {{ form.body }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form.attachments.label_tag }}
+                {{ form.attachments|add_class:"form-control-file" }}
+                <small class="form-text text-muted">You can attach up to 5 files, each not exceeding 5MB.</small>
+            </div>
+            <button type="submit" class="btn btn-primary">{% if is_edit %}Update{% else %}Create{% endif %} Template</button>
+        </form>
+    </div>
+</div>
+<script>
+  CKEDITOR.replace('id_body', {
+      toolbar: [
+          { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'Undo', 'Redo' ] },
+          { name: 'styles', items: [ 'Styles', 'Format', 'FontSize' ] },
+          { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
+          { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
+          { name: 'links', items: [ 'Link', 'Unlink' ] },
+          { name: 'insert', items: [ 'Image', 'Table' ] },
+          { name: 'tools', items: [ 'Maximize' ] },
+          { name: 'editing', items: [ 'Scayt' ] }
+      ],
+      fontSize_sizes: '8/8px;9/9px;10/10px;11/11px;12/12px;14/14px;16/16px;18/18px;20/20px;22/22px;24/24px;26/26px;28/28px;30/30px;32/32px;34/34px;36/36px',
+      uiColor: '#f8f9fa',
+      height: 300,
+      width: '100%',
+      removePlugins: 'elementspath',
+      resize_enabled: true
+  });
+</script>
+
+
+{% endblock %}
+
