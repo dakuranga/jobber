@@ -7,11 +7,13 @@ from emailclient.views import check_and_refresh_token
 from django.conf import settings as django_settings
 from datetime import datetime
 from .models import EmailSignature
+from django.contrib.auth.decorators import login_required
+
 
 
 
 from emailclient.models import UserEmail
-
+@login_required
 def settings(request):
     users = CustomUser.objects.all()  # Use your CustomUser model
     signatures = EmailSignature.objects.all()
@@ -32,7 +34,7 @@ from .forms import CustomUserCreationForm
 
 User = get_user_model()
 
-
+@login_required
 def create_user(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -78,12 +80,14 @@ def delete_user(request, user_id):
 
 from django.shortcuts import render, redirect
 from .forms import EmailSignatureForm
-
+@login_required
 def create_email_signature(request):
     if request.method == 'POST':
         form = EmailSignatureForm(request.POST)
         if form.is_valid():
-            form.save()
+            email_signature = form.save(commit=False)
+            email_signature.user = request.user  # Set the user field to the current user
+            email_signature.save()
             return redirect('email_signature_list')  # Redirect to a page displaying the list of email signatures
     else:
         form = EmailSignatureForm()
@@ -92,13 +96,13 @@ def create_email_signature(request):
 
 from django.shortcuts import get_object_or_404, redirect
 from .models import EmailSignature
-
+@login_required
 def delete_signature(request, signature_id):
     signature = get_object_or_404(EmailSignature, id=signature_id)
     if request.method == 'POST':
         signature.delete()
     return redirect('email_signature_list')  # Assuming 'signature_list' is the name of your signature list view
-
+@login_required
 def edit_email_signature(request, signature_id):
     signature = get_object_or_404(EmailSignature, id=signature_id)
     if request.method == 'POST':
@@ -115,16 +119,18 @@ def edit_email_signature(request, signature_id):
 
 from django.shortcuts import render
 from .models import EmailSignature
-
+@login_required
 def email_signature_list(request):
-    signatures = EmailSignature.objects.all()
+    current_user = request.user
+    print(current_user)
+    signatures = EmailSignature.objects.filter(user=current_user)
     return render(request, 'email_signature_list.html', {'signatures': signatures})
 
 
 from django.shortcuts import render, redirect
 from .models import EmailTemplate
 from .forms import EmailTemplateForm
-
+@login_required
 def list_email_templates(request):
     templates = EmailTemplate.objects.all()
     return render(request, 'email_template_list.html', {'templates': templates})
@@ -132,7 +138,7 @@ def list_email_templates(request):
 from attachments.views import add_attachment
 from settings.models import TemplateAttachment
 
-
+@login_required
 def create_email_template(request):
     if request.method == 'POST':
         form = EmailTemplateForm(request.POST, request.FILES)
@@ -148,7 +154,7 @@ def create_email_template(request):
     else:
         form = EmailTemplateForm()
     return render(request, 'create_email_template.html', {'form': form})
-
+@login_required
 def edit_email_template(request, template_id):
     template = get_object_or_404(EmailTemplate, id=template_id)
     if request.method == 'POST':
@@ -163,7 +169,7 @@ def edit_email_template(request, template_id):
 
 
 from django.shortcuts import get_object_or_404, redirect
-
+@login_required
 def delete_email_template(request, template_id):
     template = get_object_or_404(EmailTemplate, id=template_id)
     template.delete()
@@ -172,7 +178,7 @@ def delete_email_template(request, template_id):
 
 
 from django.shortcuts import render
-
+@login_required
 def user_list(request):
     users = User.objects.all()  # Retrieve the list of users from your database
     return render(request, 'users.html', {'users': users})
@@ -181,6 +187,7 @@ def user_list(request):
 from django.shortcuts import render
 from emailclient.models import UserEmail
 
+@login_required
 def email_accounts(request):
     emails = UserEmail.objects.all()  # Retrieve the list of emails from your database
     return render(request, 'email_accounts.html', {'emails': emails})
